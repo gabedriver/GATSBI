@@ -26,7 +26,6 @@ public class MyReader {
     }
 
     public MyReader() {
-       
         files = getFilesIn("users");
 
         
@@ -106,6 +105,7 @@ public class MyReader {
              if (!file.isHidden()){
                  System.out.println(file.getName());
              returnMe[i] = file;
+             i++;
              }
              }
          
@@ -114,5 +114,16 @@ public class MyReader {
 
 }
 
+ String filesToString(){
+     String returnMe ="";
+     for(File next: files){
+         if(next != null){
+         returnMe += "\n" + next.getName();
+     }}
+
+     return returnMe;
+ }
+     
+     
 
 }

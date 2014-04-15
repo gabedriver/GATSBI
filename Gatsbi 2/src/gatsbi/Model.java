@@ -58,7 +58,7 @@ class Model {
     private void getResponse(String text) {
         switch (lastAskedQuestion) {
             case GLOBALS.START:
-                c.say("Hello.");
+                c.say("Hello."); //Change it up a bit. Hello, hey, what's up..
                 new Timer().schedule(
                         new TimerTask() {
                     @Override
@@ -70,7 +70,7 @@ class Model {
 
                 break;
 
-            case GLOBALS.QNAME:
+            case GLOBALS.QNAME: //we should ask about a friend during a conversation instead of right after he asks for your name... like "I'm bored of this conversation, let's talk about something else. Do you have any friends?"
                 parseName(text);
                 askFriend();
                 lastAskedQuestion = GLOBALS.QFRIEND;
@@ -79,7 +79,11 @@ class Model {
                 break;
 
             case GLOBALS.QFRIEND:
-                getPerson(text);
+                if(personExists(text)){
+                    foundFriend(getPerson(text));
+                }else{
+                    genericResponse(); //okay... now add the new person to the list, create a file, and ask questions about that person.
+                }
                 lastAskedQuestion = GLOBALS.NONE;
                 break;
 
@@ -89,7 +93,7 @@ class Model {
 
     }
 
-    private void parseName(String text) {
+    private void parseName(String text) { //sets name to name... if the name exists in "/users", spits out "HEY I KNOW YOU!"
         char diff = 'a' - 'A';
        cleanse(text);
         text = text.replaceAll("im ", "");
@@ -97,7 +101,9 @@ class Model {
         text = text.replaceAll("name ", "");
         text = text.replaceAll("is ", "");
         System.out.println(text);
-        //if the name is in the files list, then spit out "i know you!"
+        if(personExists(text)){
+        c.say("Hey I know you!"); //spit out some more relevent info about the person.
+        }
         String[] words = text.split(" ");
         for (int i = 0; i < words.length; i++) {
             words[i] = (char) (words[i].charAt(0) - diff) + words[i].substring(1);
@@ -119,49 +125,52 @@ class Model {
         }
     }
 
-    //makes lower case, cleanses all punctuation
-    void cleanse(String string) {
+    void cleanse(String string) { //makes strings all lower case, gets rid of punctuation (does not affect spaces)
         string = string.toLowerCase();
         string = string.replaceAll("[^a-z ]", "");
 
     }
 
-    void getPerson(String name) {
+    File getPerson(String name) { //load the file of the person if s/he exists.
         cleanse(name);
-
         for (File next : mr.files) {
+            if(next != null){
             if (!next.isHidden() && next.getName().equals(name)) {
-                foundFriend(next);
-                return;
-            } else {
-                genericResponse();
-
+                return next;
+            } 
             }
 
         }
+        System.out.println("SHIT!!!!");
+        return null;
     }
     
-      boolean personExists(String name) {
+    
+      boolean personExists(String name) { //does the person exist in the file "users"?
         boolean returnMe = false;
           cleanse(name);
 
+          
         for (File next : mr.files) {
+            
+            if(next !=null){
+                
+                System.out.println("~"+next.getName());
             if (!next.isHidden() && next.getName().equals(name)) {
-                foundFriend(next);
                 returnMe = true;
-            }
+            }}
         }
           System.out.println("personExists = "+returnMe);         
         return  returnMe;
 
     }
 
-    private void foundFriend(File next) {
+    private void foundFriend(File next) { //spit out some relevent info about the person, or ask more questions about the person to fill in variables.
 
         c.say("I know that person! That person is my friend too!");
     }
 
-    private void genericResponse() {
+    private void genericResponse() { //the same response will never get repeated consecutively.
         int rand = (int) (Math.random() * 10);
         switch (rand) {
 
@@ -214,7 +223,7 @@ class Model {
 
     }
 
-    private void tryToAnswer(String text) {
+    private void tryToAnswer(String text) { //uses the first word of a question sentence to determine a generic answer.
         String first = text;
         String second = text;
 
