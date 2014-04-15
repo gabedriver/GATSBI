@@ -13,7 +13,7 @@ abstract class AbstractPerson {
     private String hometown;
     private short major;
     private short age;
-    private String interestingFact;
+    private String likes;
 
     public String getName() {
         return firstName;
@@ -47,8 +47,8 @@ abstract class AbstractPerson {
         return age;
     }
 
-    public String getInterestingFact() {
-        return interestingFact;
+    public String getLikes() {
+        return likes;
     }
 
     public void setName(String firstName) {
@@ -83,8 +83,8 @@ abstract class AbstractPerson {
         this.age = age;
     }
 
-    public void setInterestingFact(String interestingFact) {
-        this.interestingFact = interestingFact;
+    public void setInterestingFact(String likes) {
+        this.likes = likes;
     }
 
     public String toString() {
@@ -97,7 +97,7 @@ abstract class AbstractPerson {
         returnMe += "\thometown=" + getHometown();
         returnMe += "\tmajor=" + getMajor();
         returnMe += "\tage=" + getAge();
-        returnMe += "\tinterestingFact=" + getInterestingFact();
+        returnMe += "\tinterestingFact=" + getLikes();
         return returnMe;
     } // toString()
 }

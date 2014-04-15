@@ -19,6 +19,7 @@ public class ViewFrame extends javax.swing.JFrame {
             setSize(630, 487);
         }
         setVisible(true);
+        inputTF.requestFocus();
     }
 
     public ViewFrame(Controller c) {
@@ -94,6 +95,8 @@ public class ViewFrame extends javax.swing.JFrame {
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
         c.reset();
+        outputTA.setText("");
+        inputTF.setText("");
     }//GEN-LAST:event_resetButtonActionPerformed
 
     /**

@@ -1,5 +1,6 @@
 package gatsbi;
 
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -11,7 +12,10 @@ class Model {
     Controller c;
     private Self gatsbi;
     private Person currentPerson;
+    private Person talkingAbout;
     short lastAskedQuestion = GLOBALS.START;
+    MyReader mr = new MyReader();
+    MyWriter mw;
 
     Model(Controller c) {
         this.c = c;
@@ -46,6 +50,11 @@ class Model {
         c.say("What is your name?");
     }
 
+    private void askFriend() {
+        lastAskedQuestion = GLOBALS.QFRIEND;
+        c.say("What's your friend's name?");
+    }
+
     private void getResponse(String text) {
         switch (lastAskedQuestion) {
             case GLOBALS.START:
@@ -55,6 +64,7 @@ class Model {
                     @Override
                     public void run() {
                         askName();
+
                     }
                 }, 1000);
 
@@ -62,10 +72,17 @@ class Model {
 
             case GLOBALS.QNAME:
                 parseName(text);
-                lastAskedQuestion = GLOBALS.NONE;
-                genericResponse();
+                askFriend();
+                lastAskedQuestion = GLOBALS.QFRIEND;
+//                genericResponse();
 
                 break;
+
+            case GLOBALS.QFRIEND:
+                getPerson(text);
+                lastAskedQuestion = GLOBALS.NONE;
+                break;
+
             default:
                 tryToAnswer(text);
         }
@@ -74,13 +91,13 @@ class Model {
 
     private void parseName(String text) {
         char diff = 'a' - 'A';
-        text = text.toLowerCase();
-        text = text.replaceAll("[^a-z ]", "");
+       cleanse(text);
         text = text.replaceAll("im ", "");
         text = text.replaceAll("my ", "");
         text = text.replaceAll("name ", "");
         text = text.replaceAll("is ", "");
         System.out.println(text);
+        //if the name is in the files list, then spit out "i know you!"
         String[] words = text.split(" ");
         for (int i = 0; i < words.length; i++) {
             words[i] = (char) (words[i].charAt(0) - diff) + words[i].substring(1);
@@ -102,13 +119,57 @@ class Model {
         }
     }
 
-    void reset() {
-        currentPerson = new Person();
+    //makes lower case, cleanses all punctuation
+    void cleanse(String string) {
+        string = string.toLowerCase();
+        string = string.replaceAll("[^a-z ]", "");
+
+    }
+
+    void getPerson(String name) {
+        cleanse(name);
+
+        for (File next : mr.files) {
+            if (!next.isHidden() && next.getName().equals(name)) {
+                foundFriend(next);
+                return;
+            } else {
+                genericResponse();
+
+            }
+
+        }
+    }
+    
+      boolean personExists(String name) {
+        boolean returnMe = false;
+          cleanse(name);
+
+        for (File next : mr.files) {
+            if (!next.isHidden() && next.getName().equals(name)) {
+                foundFriend(next);
+                returnMe = true;
+            }
+        }
+          System.out.println("personExists = "+returnMe);         
+        return  returnMe;
+
+    }
+
+    private void foundFriend(File next) {
+
+        c.say("I know that person! That person is my friend too!");
     }
 
     private void genericResponse() {
         int rand = (int) (Math.random() * 10);
         switch (rand) {
+
+
+            case 0:
+                c.say("What did I ever do to deserve this..");
+                break;
+
             case 1:
                 c.say("Go on...");
                 break;
@@ -145,9 +206,6 @@ class Model {
                 c.say("How utterly uninteresting.");
                 break;
 
-            case 10:
-                c.say("What did I ever do to deserve this..");
-                break;
 
             default:
                 System.out.println("Error");
@@ -155,58 +213,60 @@ class Model {
 
 
     }
-     private void tryToAnswer(String text) {
+
+    private void tryToAnswer(String text) {
         String first = text;
         String second = text;
 
         first = first.split(" ")[0].toLowerCase();
         first = first.replaceAll("[^a-z ]", "");
-        
-        if (text.split(" ").length > 1){
-        second = text.split(" ")[1].toLowerCase();
-        second = second.replaceAll("[^a-z ]", "");
-        
-        if (text.split(" ").length > 2){
-        if (second.contains("the")  || second.contains("a") ||second.contains("an")){
-            second += " " + text.split(" ")[2].toLowerCase();
+
+        if (text.split(" ").length > 1) {
+            second = text.split(" ")[1].toLowerCase();
+            second = second.replaceAll("[^a-z ]", "");
+
+            if (text.split(" ").length > 2) {
+                if (second.contains("the") || second.contains("a") || second.contains("an")) {
+                    second += " " + text.split(" ")[2].toLowerCase();
+                }
+            }
         }
-        }
-        }
-        
+
         switch (first) {
             case "who":
                 c.say("Who indeed...");
                 break;
-                
+
             case "what":
                 c.say("A better question would be.. What's the point of existence?");
                 break;
-                
+
             case "when":
                 c.say("Sorry, I can't tell time. Time is a social construct anyway.");
                 break;
-                
+
             case "where":
                 c.say("Up yours.");
                 break;
-                
+
             case "why":
                 c.say("Because... your mom?");
                 break;
-                
+
             case "how":
                 c.say("That's a dumb question.");
                 break;
-                
+
             case "are":
-                if(second.equals("you")){
+                if (second.equals("you")) {
                     c.say("Me? Let's not talk about me.");
-                } else{
-                c.say("Why are you asking about " + second +"? It's not like you actually care.");}
+                } else {
+                    c.say("Why are you asking about " + second + "? It's not like you actually care.");
+                }
                 break;
-                
+
             case "is":
-                c.say("Uhh... "+second +"? Who CARES?!");
+                c.say("Uhh... " + second + "? Who CARES?!");
                 break;
 
             case "can":
@@ -223,6 +283,4 @@ class Model {
 
 
     }
-    
-    
 }
