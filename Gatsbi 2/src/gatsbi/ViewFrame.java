@@ -57,6 +57,7 @@ public class ViewFrame extends javax.swing.JFrame {
         outputTA.setEditable(false);
         outputTA.setColumns(20);
         outputTA.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        outputTA.setLineWrap(true);
         outputTA.setRows(5);
         jScrollPane1.setViewportView(outputTA);
 
@@ -97,6 +98,7 @@ public class ViewFrame extends javax.swing.JFrame {
         c.reset();
         outputTA.setText("");
         inputTF.setText("");
+        inputTF.requestFocus();
     }//GEN-LAST:event_resetButtonActionPerformed
 
     /**
