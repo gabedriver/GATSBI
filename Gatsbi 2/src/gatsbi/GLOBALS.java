@@ -73,8 +73,12 @@ public class GLOBALS {
     static final short QHOMETOWN = 4;
     static final short QMAJOR = 5;
     static final short QAGE = 6;
-    static final short QINTERESTINGFACT = 7;   
+    static final short QLIKES = 7;   
     static final short QFRIEND = 8;  
+    static final short QMIDNAME = 9;
+    static final short QLASTNAME = 10;
+    
+    
     
     
 }

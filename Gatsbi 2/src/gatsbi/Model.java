@@ -16,6 +16,7 @@ class Model {
     private Person currentPerson;
     private Person friend;
     short lastAskedQuestion = GLOBALS.START;
+    boolean personIsNew = false;
     MyReader mr = new MyReader();
     MyWriter mw;
 
@@ -64,21 +65,72 @@ class Model {
                 c.say("Hello."); //Change it up a bit. Hello, hey, what's up..
                 new Timer().schedule(
                         new TimerTask() {
-                    @Override
-                    public void run() {
-                        askName();
+                            @Override
+                            public void run() {
+                                askName();
 
-                    }
-                }, 1000);
+                            }
+                        }, 1000);
 
                 break;
 
             case GLOBALS.QNAME: //we should ask about a friend during a conversation instead of right after he asks for your name... like "I'm bored of this conversation, let's talk about something else. Do you have any friends?"
                 parseName(text);
+                if (personIsNew) {
+                    c.say("Oh, I haven't met you before...");
+                    askMidName();
+                    break;
+                }
                 askFriend();
                 lastAskedQuestion = GLOBALS.QFRIEND;
 //                genericResponse();
 
+                break;
+
+            case GLOBALS.QMIDNAME:
+                currentPerson.setMidName(text);
+                askLastName();
+                break;
+
+            case GLOBALS.QLASTNAME:
+                currentPerson.setLastName(text);
+                askAge();
+                break;
+
+            case GLOBALS.QAGE:
+                currentPerson.setAge((short) Integer.parseInt(text));
+                askGender();
+                break;
+
+            case GLOBALS.QGENDER:
+                currentPerson.setGenderM(Integer.parseInt(text) == 1);
+
+                askOccupation();
+                break;
+
+            case GLOBALS.QOCCUPATION:
+                currentPerson.setOccupation((short) Integer.parseInt(text));
+
+                askHometown();
+                break;
+
+            case GLOBALS.QHOMETOWN:
+                currentPerson.setHometown(text);
+
+                askMajor();
+                break;
+
+            case GLOBALS.QMAJOR:
+                currentPerson.setMajor((short) Integer.parseInt(text));
+
+                askLikes();
+                break;
+
+            case GLOBALS.QLIKES:
+                currentPerson.setLikes(text);
+                printPerson();
+                c.say("Now I know all about you! Let's talk about your friends now.");
+                askFriend();
                 break;
 
             case GLOBALS.QFRIEND:
@@ -105,9 +157,7 @@ class Model {
         text = text.replaceAll("name ", "");
         text = text.replaceAll("is ", "");
 //        System.out.println(text);
-        if(personExists(text)){
-         foundSelf(getPerson(text));
-        }
+
         String[] words = text.split(" ");
         for (int i = 0; i < words.length; i++) {
             words[i] = (char) (words[i].charAt(0) - diff) + words[i].substring(1);
@@ -126,6 +176,14 @@ class Model {
 //            System.out.println("3");
         } else {
             System.out.println("I am Confused");
+        }
+
+        if (personExists(text)) {
+            foundSelf(getPerson(text));
+            personIsNew = false;
+        } else {
+            personIsNew = true;
+            createNewPerson(text);
         }
     }
 
@@ -155,7 +213,6 @@ class Model {
         boolean returnMe = false;
         name = cleanse(name);
 
-
         for (File next : mr.files) {
 
             if (next != null) {
@@ -171,24 +228,22 @@ class Model {
 
     }
 
-       private void foundSelf(File file) {
+    private void foundSelf(File file) {
         MyReader self = new MyReader(file);
         currentPerson = new Person(self);
-        c.say("Oh, you again. You like " + currentPerson.getLikes() +", if I remember correctly.");
-
-    
+        c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");
     }
-      
+
     private void foundFriend(File next) { //spit out some relevent info about the person, or ask more questions about the person to fill in variables.
 
         MyReader friendFile = new MyReader(next);
         friend = new Person(friendFile);
-        if(friend.getName().equals(currentPerson.getName())){
+        if (friend.getName().equals(currentPerson.getName())) {
             c.say("I guess it's nice that you're your own friend... but don't you have any other friends?");
             lastAskedQuestion = GLOBALS.QFRIEND;
             return;
         }
-        c.say("Oh hey, I know him! That's the one that likes " + friend.getLikes() +", right?");
+        c.say("Oh hey, I know him! That's the one that likes " + friend.getLikes() + ", right?");
         lastAskedQuestion = GLOBALS.NONE;
 
     }
@@ -198,14 +253,14 @@ class Model {
         text = text.replaceAll("[^a-z ]", "");
 
         for (String next : responses.keySet()) {
-            if(text.contains(next)){
+            if (text.contains(next)) {
                 String[] choices = responses.get(next);
-                c.say(choices[(int)(Math.random()*choices.length)]);
+                c.say(choices[(int) (Math.random() * choices.length)]);
                 return;
             }
         }
         String[] choices = responses.get("NOKEYFOUND");
-        c.say(choices[(int)(Math.random()*choices.length)]);
+        c.say(choices[(int) (Math.random() * choices.length)]);
     }
 
     private void loadResponses() {
@@ -223,5 +278,76 @@ class Model {
             rr.giveMeTheNextLine();
             responses.put(nextKey, nextResponses);
         }
+    }
+
+    private void createNewPerson(String name) { //create a new person with name
+        mw = new MyWriter(name);
+        currentPerson = new Person();
+        currentPerson.setName(name);
+        //            mw.close();
+        System.out.println("hello");
+
+    }
+
+    private void askMidName() {
+
+        c.say("What's your middle name?");
+        lastAskedQuestion = GLOBALS.QMIDNAME;
+    }
+
+    private void askLastName() {
+
+        c.say("What's your last name?");
+        lastAskedQuestion = GLOBALS.QLASTNAME;
+    }
+
+    private void askGender() {
+
+        c.say("Are you male of female?");
+        lastAskedQuestion = GLOBALS.QGENDER;
+    }
+
+    private void askOccupation() {
+
+        c.say("What's your occupation?");
+        lastAskedQuestion = GLOBALS.QOCCUPATION;
+    }
+
+    private void askHometown() {
+
+        c.say("What's your hometown?");
+        lastAskedQuestion = GLOBALS.QHOMETOWN;
+    }
+
+    private void askMajor() {
+
+        c.say("What's your major?");
+        lastAskedQuestion = GLOBALS.QMAJOR;
+    }
+
+    private void askAge() {
+
+        c.say("What's your age?");
+        lastAskedQuestion = GLOBALS.QAGE;
+    }
+
+    private void askLikes() {
+
+        c.say("What do you like?");
+        lastAskedQuestion = GLOBALS.QLIKES;
+    }
+
+    private void printPerson() {
+mw.println(currentPerson.getName());
+mw.println(currentPerson.getMidName());
+mw.println(currentPerson.getLastName());
+mw.println(""+(currentPerson.getGenderM()?1:0));
+mw.println(""+currentPerson.getOccupation());
+mw.println(currentPerson.getHometown());
+mw.println(""+currentPerson.getMajor());
+mw.println(""+currentPerson.getAge());
+mw.println(currentPerson.getLikes());
+mw.close();
+    
     }
 }
