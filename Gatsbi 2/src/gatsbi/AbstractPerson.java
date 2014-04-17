@@ -83,7 +83,7 @@ abstract class AbstractPerson {
         this.age = age;
     }
 
-    public void setInterestingFact(String likes) {
+    public void setLikes(String likes) {
         this.likes = likes;
     }
 

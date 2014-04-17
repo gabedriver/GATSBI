@@ -30,6 +30,10 @@ public class MyReader {
 
         
     }
+    
+    public MyReader(File file){
+        openIt(file.getAbsolutePath());
+    }
 
     public MyReader(String filename) {
         openIt(filename);
@@ -103,7 +107,7 @@ public class MyReader {
             int i = 0;
              for (File file : folder.listFiles()) {
              if (!file.isHidden()){
-                 System.out.println(file.getName());
+//                 System.out.println(file.getName());
              returnMe[i] = file;
              i++;
              }

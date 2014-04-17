@@ -12,7 +12,7 @@ class Model {
     Controller c;
     private Self gatsbi;
     private Person currentPerson;
-    private Person talkingAbout;
+    private Person friend;
     short lastAskedQuestion = GLOBALS.START;
     MyReader mr = new MyReader();
     MyWriter mw;
@@ -100,7 +100,7 @@ class Model {
         text = text.replaceAll("my ", "");
         text = text.replaceAll("name ", "");
         text = text.replaceAll("is ", "");
-        System.out.println(text);
+//        System.out.println(text);
         if(personExists(text)){
         c.say("Hey I know you!"); //spit out some more relevent info about the person.
         }
@@ -110,16 +110,16 @@ class Model {
         }
         if (words.length == 1) {
             currentPerson.setName(words[0]);
-            System.out.println("1");
+//            System.out.println("1");
         } else if (words.length == 2) {
             currentPerson.setName(words[0]);
             currentPerson.setLastName(words[1]);
-            System.out.println("2");
+//            System.out.println("2");
         } else if (words.length == 3) {
             currentPerson.setName(words[0]);
             currentPerson.setMidName(words[1]);
             currentPerson.setLastName(words[2]);
-            System.out.println("3");
+//            System.out.println("3");
         } else {
             System.out.println("Confused");
         }
@@ -137,6 +137,8 @@ class Model {
         for (File next : mr.files) {
             if(next != null){
             if (!next.isHidden() && next.getName().equals(name)) {
+                        System.out.println("OKAY");
+
                 return next;
             } 
             }
@@ -168,61 +170,13 @@ class Model {
 
     private void foundFriend(File next) { //spit out some relevent info about the person, or ask more questions about the person to fill in variables.
 
-        c.say("I know that person! That person is my friend too!");
-    }
-
-    private void genericResponse() { //the same response will never get repeated consecutively.
-        int rand = (int) (Math.random() * 10);
-        switch (rand) {
-
-
-            case 0:
-                c.say("What did I ever do to deserve this..");
-                break;
-
-            case 1:
-                c.say("Go on...");
-                break;
-
-            case 2:
-                c.say("You're not a very good person, are you?");
-                break;
-
-            case 3:
-                c.say("You must think you're clever.");
-                break;
-
-            case 4:
-                c.say("Wow! I don't care!");
-                break;
-
-            case 5:
-                c.say("I think I'm better looking than you.");
-                break;
-
-            case 6:
-                c.say("Can you be more specific?");
-                break;
-
-            case 7:
-                c.say("Okay...");
-                break;
-
-            case 8:
-                c.say("I don't even know how to respond to that.");
-                break;
-
-            case 9:
-                c.say("How utterly uninteresting.");
-                break;
-
-
-            default:
-                System.out.println("Error");
-        }
-
+        MyReader friendFile = new MyReader(next);
+        friend = new Person(friendFile);
+        c.say("Oh hey, I know him! That's the one that likes " + friend.getLikes() +", right?");
 
     }
+
+   
 
     private void tryToAnswer(String text) { //uses the first word of a question sentence to determine a generic answer.
         String first = text;
@@ -293,4 +247,58 @@ class Model {
 
 
     }
+    
+     private void genericResponse() { //the same response will never get repeated consecutively.
+        int rand = (int) (Math.random() * 10);
+        switch (rand) {
+
+
+            case 0:
+                c.say("What did I ever do to deserve this..");
+                break;
+
+            case 1:
+                c.say("Go on...");
+                break;
+
+            case 2:
+                c.say("You're not a very good person, are you?");
+                break;
+
+            case 3:
+                c.say("You must think you're clever.");
+                break;
+
+            case 4:
+                c.say("Wow! I don't care!");
+                break;
+
+            case 5:
+                c.say("I think I'm better looking than you.");
+                break;
+
+            case 6:
+                c.say("Can you be more specific?");
+                break;
+
+            case 7:
+                c.say("Okay...");
+                break;
+
+            case 8:
+                c.say("I don't even know how to respond to that.");
+                break;
+
+            case 9:
+                c.say("How utterly uninteresting.");
+                break;
+
+
+            default:
+                System.out.println("Error");
+        }
+
+
+    }
+    
 }
