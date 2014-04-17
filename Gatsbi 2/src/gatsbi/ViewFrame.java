@@ -58,6 +58,7 @@ public class ViewFrame extends javax.swing.JFrame {
         outputTA.setColumns(20);
         outputTA.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         outputTA.setRows(5);
+        outputTA.setWrapStyleWord(true);
         jScrollPane1.setViewportView(outputTA);
 
         getContentPane().add(jScrollPane1);
