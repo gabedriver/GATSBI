@@ -98,7 +98,7 @@ public class MyReader {
     }
     
      File[] getFilesIn(String path) {
-          ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         URL url = classLoader.getResource(path);
         File folder = null;
         try {
@@ -115,8 +115,6 @@ public class MyReader {
              i++;
              }
              }
-         
-         
              return returnMe;
 
 }
