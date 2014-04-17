@@ -121,14 +121,14 @@ class Model {
             currentPerson.setLastName(words[2]);
             System.out.println("3");
         } else {
-            System.out.println("Confused");
+            System.out.println("I am Confused");
         }
     }
 
     void cleanse(String string) { //makes strings all lower case, gets rid of punctuation (does not affect spaces)
         string = string.toLowerCase();
         string = string.replaceAll("[^a-z ]", "");
-
+        
     }
 
     File getPerson(String name) { //load the file of the person if s/he exists.
