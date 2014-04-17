@@ -121,7 +121,7 @@ class Model {
             currentPerson.setLastName(words[2]);
 //            System.out.println("3");
         } else {
-            System.out.println("Confused");
+            System.out.println("I am Confused");
         }
     }
 
@@ -129,7 +129,6 @@ class Model {
         string = string.toLowerCase();
         string = string.replaceAll("[^a-z ]", "");
         return string;
-
     }
 
     File getPerson(String name) { //load the file of the person if s/he exists.
