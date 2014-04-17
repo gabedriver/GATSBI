@@ -64,12 +64,12 @@ class Model {
                 c.say("Hello."); //Change it up a bit. Hello, hey, what's up..
                 new Timer().schedule(
                         new TimerTask() {
-                    @Override
-                    public void run() {
-                        askName();
+                            @Override
+                            public void run() {
+                                askName();
 
-                    }
-                }, 1000);
+                            }
+                        }, 1000);
 
                 break;
 
@@ -105,8 +105,8 @@ class Model {
         text = text.replaceAll("name ", "");
         text = text.replaceAll("is ", "");
 //        System.out.println(text);
-        if(personExists(text)){
-         foundSelf(getPerson(text));
+        if (personExists(text)) {
+            foundSelf(getPerson(text));
         }
         String[] words = text.split(" ");
         for (int i = 0; i < words.length; i++) {
@@ -155,7 +155,6 @@ class Model {
         boolean returnMe = false;
         name = cleanse(name);
 
-
         for (File next : mr.files) {
 
             if (next != null) {
@@ -171,41 +170,47 @@ class Model {
 
     }
 
-       private void foundSelf(File file) {
+    private void foundSelf(File file) {
         MyReader self = new MyReader(file);
         currentPerson = new Person(self);
-        c.say("Oh, you again. You like " + currentPerson.getLikes() +", if I remember correctly.");
+        c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");
 
-    
     }
-      
+
     private void foundFriend(File next) { //spit out some relevent info about the person, or ask more questions about the person to fill in variables.
 
         MyReader friendFile = new MyReader(next);
         friend = new Person(friendFile);
-        if(friend.getName().equals(currentPerson.getName())){
+        if (friend.getName().equals(currentPerson.getName())) {
             c.say("I guess it's nice that you're your own friend... but don't you have any other friends?");
             lastAskedQuestion = GLOBALS.QFRIEND;
             return;
         }
-        c.say("Oh hey, I know him! That's the one that likes " + friend.getLikes() +", right?");
+        c.say("Oh hey, I know him! That's the one that likes " + friend.getLikes() + ", right?");
         lastAskedQuestion = GLOBALS.NONE;
 
     }
 
     private void tryToAnswer(String text) { //uses the first word of a question sentence to determine a generic answer.
         text = text.toLowerCase();
-        text = text.replaceAll("[^a-z ]", "");
-
+        text = text.replaceAll("'", "");
+        text = text.replaceAll("[^a-z ]", " ");
+        text = " " + text + " ";
+        
+        if(text.contains("your") && text.contains("name")){
+            c.say("My name is " + gatsbi.getName());
+            return;
+        }
+        
         for (String next : responses.keySet()) {
-            if(text.contains(next)){
+            if (text.contains(" " + next + " ")) {
                 String[] choices = responses.get(next);
-                c.say(choices[(int)(Math.random()*choices.length)]);
+                c.say(choices[(int) (Math.random() * choices.length)]);
                 return;
             }
         }
         String[] choices = responses.get("NOKEYFOUND");
-        c.say(choices[(int)(Math.random()*choices.length)]);
+        c.say(choices[(int) (Math.random() * choices.length)]);
     }
 
     private void loadResponses() {
@@ -221,7 +226,10 @@ class Model {
                 nextResponses[i] = rr.giveMeTheNextLine();
             }
             rr.giveMeTheNextLine();
-            responses.put(nextKey, nextResponses);
+            String[] allKeys = nextKey.split(";");
+            for (int i = 0; i < allKeys.length; i++) {
+                responses.put(allKeys[i], nextResponses);
+            }
         }
     }
 }

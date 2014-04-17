@@ -9,11 +9,8 @@ class Controller{
     Model m;
 
     Controller() {
-
         vf = new ViewFrame(this);
         m = new Model(this);
-     
-
     }
 
     void parse(String text) {
@@ -33,7 +30,6 @@ class Controller{
     }
 
     void reset() {
-
         m = new Model(this);
     }
 }
