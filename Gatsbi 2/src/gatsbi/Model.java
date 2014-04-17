@@ -85,7 +85,7 @@ class Model {
                 if (personExists(text)) {
                     foundFriend(getPerson(text));
                 } else {
-                    genericResponse(); //okay... now add the new person to the list, create a file, and ask questions about that person.
+                    //genericResponse(); //okay... now add the new person to the list, create a file, and ask questions about that person.
                     lastAskedQuestion = GLOBALS.NONE;
 
                 }
@@ -137,7 +137,7 @@ class Model {
     }
 
     File getPerson(String name) { //load the file of the person if s/he exists.
-        cleanse(name);
+        name = cleanse(name);
         for (File next : mr.files) {
             if (next != null) {
                 if (!next.isHidden() && next.getName().equals(name)) {
@@ -195,126 +195,18 @@ class Model {
     }
 
     private void tryToAnswer(String text) { //uses the first word of a question sentence to determine a generic answer.
-        String first = text;
-        String second = text;
+        text = text.toLowerCase();
+        text = text.replaceAll("[^a-z ]", "");
 
-        first = first.split(" ")[0].toLowerCase();
-        first = first.replaceAll("[^a-z ]", "");
-
-        if (text.split(" ").length > 1) {
-            second = text.split(" ")[1].toLowerCase();
-            second = second.replaceAll("[^a-z ]", "");
-
-            if (text.split(" ").length > 2) {
-                if (second.contains("the") || second.contains("a") || second.contains("an")) {
-                    second += " " + text.split(" ")[2].toLowerCase();
-                }
+        for (String next : responses.keySet()) {
+            if(text.contains(next)){
+                String[] choices = responses.get(next);
+                c.say(choices[(int)(Math.random()*choices.length)]);
+                return;
             }
         }
-
-        switch (first) {
-            case "who":
-                c.say("Who indeed...");
-                break;
-
-            case "what":
-                c.say("A better question would be.. What's the point of existence?");
-                break;
-
-            case "when":
-                c.say("Sorry, I can't tell time. Time is a social construct anyway.");
-                break;
-
-            case "where":
-                c.say("Up yours.");
-                break;
-
-            case "why":
-                c.say("Because... your mom?");
-                break;
-
-            case "how":
-                c.say("That's a dumb question.");
-                break;
-
-            case "are":
-                if (second.equals("you")) {
-                    c.say("Me? Let's not talk about me.");
-                } else {
-                    c.say("Why are you asking about " + second + "? It's not like you actually care.");
-                }
-                break;
-
-            case "is":
-                c.say("Uhh... " + second + "? Who CARES?!");
-                break;
-
-            case "can":
-                c.say("Can you not?");
-                break;
-
-            case "if":
-                c.say("It's never going to happen, so why bother talking about it?");
-                break;
-
-            default:
-                genericResponse();
-        }
-
-
-    }
-
-    private void genericResponse() { //the same response will never get repeated consecutively.
-        int rand = (int) (Math.random() * 10);
-        switch (rand) {
-
-
-            case 0:
-                c.say("What did I ever do to deserve this..");
-                break;
-
-            case 1:
-                c.say("Go on...");
-                break;
-
-            case 2:
-                c.say("You're not a very good person, are you?");
-                break;
-
-            case 3:
-                c.say("You must think you're clever.");
-                break;
-
-            case 4:
-                c.say("Wow! I don't care!");
-                break;
-
-            case 5:
-                c.say("I think I'm better looking than you.");
-                break;
-
-            case 6:
-                c.say("Can you be more specific?");
-                break;
-
-            case 7:
-                c.say("Okay...");
-                break;
-
-            case 8:
-                c.say("I don't even know how to respond to that.");
-                break;
-
-            case 9:
-                c.say("How utterly uninteresting.");
-                break;
-
-
-            default:
-                System.out.println("Error");
-        }
-
-
+        String[] choices = responses.get("NOKEYFOUND");
+        c.say(choices[(int)(Math.random()*choices.length)]);
     }
 
     private void loadResponses() {
