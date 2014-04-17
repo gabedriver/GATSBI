@@ -97,7 +97,7 @@ class Model {
 
     }
 
-    private void parseName(String text) { //sets name to name... if the name exists in "/users", spits out "HEY I KNOW YOU!"
+    private void parseName(String text) { //sets name to name... if the name exists in "users", spits out "HEY I KNOW YOU!"
         char diff = 'a' - 'A';
         text = cleanse(text);
         text = text.replaceAll("im ", "");
@@ -106,8 +106,7 @@ class Model {
         text = text.replaceAll("is ", "");
 //        System.out.println(text);
         if(personExists(text)){
-                    foundSelf(getPerson(text));
-                    
+         foundSelf(getPerson(text));
         }
         String[] words = text.split(" ");
         for (int i = 0; i < words.length; i++) {
