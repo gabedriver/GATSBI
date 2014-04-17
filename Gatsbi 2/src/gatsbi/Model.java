@@ -128,12 +128,7 @@ class Model {
     String cleanse(String string) { //makes strings all lower case, gets rid of punctuation (does not affect spaces)
         string = string.toLowerCase();
         string = string.replaceAll("[^a-z ]", "");
-<<<<<<< HEAD
-        
-=======
         return string;
-
->>>>>>> b8ef88bcc52466bc1572a236aa2d05bc06427ffa
     }
 
     File getPerson(String name) { //load the file of the person if s/he exists.
