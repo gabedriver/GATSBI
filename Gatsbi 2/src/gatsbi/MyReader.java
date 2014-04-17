@@ -7,8 +7,6 @@ import java.io.*;
 import java.awt.*;
 import java.net.*;
 import java.applet.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MyReader {
 
@@ -26,9 +24,7 @@ public class MyReader {
     }
 
     public MyReader() {
-        files = getFilesIn("users");
-
-        
+        files = getFilesIn("users"); 
     }
     
     public MyReader(File file){
@@ -36,7 +32,14 @@ public class MyReader {
     }
 
     public MyReader(String filename) {
-        openIt(filename);
+        File[] otherFiles = getFilesIn("other");
+        for (File file : otherFiles) {
+            if(file.getName().equals(filename)){
+                openIt(file.getAbsolutePath());
+                return;
+            }
+        }
+        System.out.println("NO FOLDER");
     }
 
     public MyReader(String filename, Applet theApplet) {

@@ -1,6 +1,7 @@
 package gatsbi;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -10,6 +11,7 @@ import java.util.TimerTask;
 class Model {
 
     Controller c;
+    private HashMap<String, String[]> responses = new HashMap<>();
     private Self gatsbi;
     private Person currentPerson;
     private Person friend;
@@ -19,6 +21,7 @@ class Model {
 
     Model(Controller c) {
         this.c = c;
+        loadResponses();
         currentPerson = new Person();
         gatsbi = new Self();
     }
@@ -79,9 +82,9 @@ class Model {
                 break;
 
             case GLOBALS.QFRIEND:
-                if(personExists(text)){
+                if (personExists(text)) {
                     foundFriend(getPerson(text));
-                }else{
+                } else {
                     genericResponse(); //okay... now add the new person to the list, create a file, and ask questions about that person.
                     lastAskedQuestion = GLOBALS.NONE;
 
@@ -96,7 +99,7 @@ class Model {
 
     private void parseName(String text) { //sets name to name... if the name exists in "users", spits out "HEY I KNOW YOU!"
         char diff = 'a' - 'A';
-       text = cleanse(text);
+        text = cleanse(text);
         text = text.replaceAll("im ", "");
         text = text.replaceAll("my ", "");
         text = text.replaceAll("name ", "");
@@ -135,36 +138,36 @@ class Model {
     File getPerson(String name) { //load the file of the person if s/he exists.
         cleanse(name);
         for (File next : mr.files) {
-            if(next != null){
-            if (!next.isHidden() && next.getName().equals(name)) {
-                        System.out.println("OKAY");
+            if (next != null) {
+                if (!next.isHidden() && next.getName().equals(name)) {
+                    System.out.println("OKAY");
 
-                return next;
-            } 
+                    return next;
+                }
             }
 
         }
         System.out.println("SHIT!!!!");
         return null;
     }
-    
-    
-      boolean personExists(String name) { //does the person exist in the file "users"?
-        boolean returnMe = false;
-          name = cleanse(name);
 
-          
+    boolean personExists(String name) { //does the person exist in the file "users"?
+        boolean returnMe = false;
+        name = cleanse(name);
+
+
         for (File next : mr.files) {
-            
-            if(next !=null){
-                
-                System.out.println("~"+next.getName());
-            if (!next.isHidden() && next.getName().equals(name)) {
-                returnMe = true;
-            }}
+
+            if (next != null) {
+
+                System.out.println("~" + next.getName());
+                if (!next.isHidden() && next.getName().equals(name)) {
+                    returnMe = true;
+                }
+            }
         }
-          System.out.println("personExists = "+returnMe);         
-        return  returnMe;
+        System.out.println("personExists = " + returnMe);
+        return returnMe;
 
     }
 
@@ -188,10 +191,7 @@ class Model {
         c.say("Oh hey, I know him! That's the one that likes " + friend.getLikes() +", right?");
         lastAskedQuestion = GLOBALS.NONE;
 
-
     }
-
-   
 
     private void tryToAnswer(String text) { //uses the first word of a question sentence to determine a generic answer.
         String first = text;
@@ -262,8 +262,8 @@ class Model {
 
 
     }
-    
-     private void genericResponse() { //the same response will never get repeated consecutively.
+
+    private void genericResponse() { //the same response will never get repeated consecutively.
         int rand = (int) (Math.random() * 10);
         switch (rand) {
 
@@ -316,6 +316,20 @@ class Model {
 
     }
 
-   
-    
+    private void loadResponses() {
+        MyReader rr = new MyReader("responses");
+        String nextKey;
+        String[] nextResponses;
+        while (rr.hasMoreData()) {
+            String input = rr.giveMeTheNextLine();
+            nextKey = input.substring(1);
+            int ln = Integer.parseInt(rr.giveMeTheNextLine());
+            nextResponses = new String[ln];
+            for (int i = 0; i < ln; i++) {
+                nextResponses[i] = rr.giveMeTheNextLine();
+            }
+            rr.giveMeTheNextLine();
+            responses.put(nextKey, nextResponses);
+        }
+    }
 }
