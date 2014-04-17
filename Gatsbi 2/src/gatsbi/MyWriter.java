@@ -6,6 +6,10 @@ package gatsbi;
 
 import java.io.*;
 import java.awt.*;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MyWriter  {
     protected PrintWriter pw;
@@ -17,9 +21,20 @@ public class MyWriter  {
         openIt(getFileName());
     }
     
-    public MyWriter(String filename) {
-        openIt(filename);
+    public MyWriter(String path) {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        URL url = classLoader.getResource("users");
+        File file = null;
+        String absPath = "";
+        try {
+            file = new File(url.toURI());
+            absPath = file.getAbsolutePath() + "/"+path;
+              } catch (URISyntaxException ex) {
+            System.out.println("MyWriter Prblem!!");        
+        } 
+        openIt(absPath);
     }
+    
 
     public MyWriter(String filename, boolean b) {
         openIt(getFileName(filename));
@@ -32,6 +47,8 @@ public class MyWriter  {
         } catch (Exception e) {System.out.println("MyWriter -- can't open " + filename + "!" + e);}
     }
     
+    
+    
     public void print(String s) {
         pw.print(s);
     }
@@ -43,6 +60,8 @@ public class MyWriter  {
     public void close() {
         pw.close();
     }
+    
+    
         
      String getFileName() {
         FileDialog fd = new FileDialog(new Frame(), "Select Output File", FileDialog.SAVE);
@@ -56,7 +75,9 @@ public class MyWriter  {
         FileDialog fd = new FileDialog(new Frame(), "Select Output File", FileDialog.SAVE);
         fd.setDirectory(path);
         fd.setVisible(true);
+        System.out.println(fd.getDirectory()+fd.getFile());
         return fd.getDirectory()+fd.getFile();  // return the complete path
+         
     }
 
         
