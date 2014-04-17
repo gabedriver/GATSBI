@@ -83,8 +83,9 @@ class Model {
                     foundFriend(getPerson(text));
                 }else{
                     genericResponse(); //okay... now add the new person to the list, create a file, and ask questions about that person.
+                    lastAskedQuestion = GLOBALS.NONE;
+
                 }
-                lastAskedQuestion = GLOBALS.NONE;
                 break;
 
             default:
@@ -102,7 +103,8 @@ class Model {
         text = text.replaceAll("is ", "");
 //        System.out.println(text);
         if(personExists(text)){
-        c.say("Hey I know you!"); //spit out some more relevent info about the person.
+                    foundSelf(getPerson(text));
+                    
         }
         String[] words = text.split(" ");
         for (int i = 0; i < words.length; i++) {
@@ -167,11 +169,26 @@ class Model {
 
     }
 
+       private void foundSelf(File file) {
+        MyReader self = new MyReader(file);
+        currentPerson = new Person(self);
+        c.say("Oh, you again. You like " + currentPerson.getLikes() +", if I remember correctly.");
+
+    
+    }
+      
     private void foundFriend(File next) { //spit out some relevent info about the person, or ask more questions about the person to fill in variables.
 
         MyReader friendFile = new MyReader(next);
         friend = new Person(friendFile);
+        if(friend.getName().equals(currentPerson.getName())){
+            c.say("I guess it's nice that you're your own friend... but don't you have any other friends?");
+            lastAskedQuestion = GLOBALS.QFRIEND;
+            return;
+        }
         c.say("Oh hey, I know him! That's the one that likes " + friend.getLikes() +", right?");
+        lastAskedQuestion = GLOBALS.NONE;
+
 
     }
 
@@ -299,5 +316,7 @@ class Model {
 
 
     }
+
+   
     
 }
