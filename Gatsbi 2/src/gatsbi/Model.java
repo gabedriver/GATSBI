@@ -95,7 +95,7 @@ class Model {
 
     private void parseName(String text) { //sets name to name... if the name exists in "/users", spits out "HEY I KNOW YOU!"
         char diff = 'a' - 'A';
-       cleanse(text);
+       text = cleanse(text);
         text = text.replaceAll("im ", "");
         text = text.replaceAll("my ", "");
         text = text.replaceAll("name ", "");
@@ -125,9 +125,10 @@ class Model {
         }
     }
 
-    void cleanse(String string) { //makes strings all lower case, gets rid of punctuation (does not affect spaces)
+    String cleanse(String string) { //makes strings all lower case, gets rid of punctuation (does not affect spaces)
         string = string.toLowerCase();
         string = string.replaceAll("[^a-z ]", "");
+        return string;
 
     }
 
@@ -148,7 +149,7 @@ class Model {
     
       boolean personExists(String name) { //does the person exist in the file "users"?
         boolean returnMe = false;
-          cleanse(name);
+          name = cleanse(name);
 
           
         for (File next : mr.files) {
