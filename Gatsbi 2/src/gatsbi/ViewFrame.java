@@ -147,10 +147,14 @@ public class ViewFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     void say(String output) {
+  
+
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException ex) {
             System.out.println("nope.");        }
+ 
+
         outputTA.append("GATSBI: " + output + "\n");
         outputTA.setCaretPosition(outputTA.getDocument().getLength());
     }

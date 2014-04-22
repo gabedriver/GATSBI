@@ -85,6 +85,7 @@ class Model {
 
             case GLOBALS.QMIDNAME:
                 currentPerson.setMidName(parseMidLast(text));
+                c.say("That's an interesting middle name...");
                 text = cleanse(text);
                 if (text.contains("you") || text.contains("your")) {
                     c.say("Mine is " + gatsbi.getMidName()+".");
@@ -94,6 +95,8 @@ class Model {
 
             case GLOBALS.QLASTNAME:
                 currentPerson.setLastName(parseMidLast(text));
+                c.say("Your name is cool, but not as cool as mine.");
+
                 text = cleanse(text);
 
                 if (text.contains("you") || text.contains("your")) {
@@ -104,6 +107,7 @@ class Model {
 
             case GLOBALS.QAGE:
                 currentPerson.setAge((short) parseAge(text));
+
                 text = cleanse(text);
 
                 if (text.contains("you") || text.contains("your")) {
@@ -115,8 +119,10 @@ class Model {
             case GLOBALS.QGENDER:
                 if (text.contains("woman") || text.contains("female") || text.contains("lady") || text.contains("girl")) {
                     currentPerson.setGenderM(false);
+                    c.say("That's nice. I definitely relate better to females.");
                 } else if (text.contains("man") || text.contains("male") || text.contains("guy") || text.contains("boy")) {
                     currentPerson.setGenderM(true);
+                    c.say("That's nice. I definitely relate better to males.");
                 }
                 text = cleanse(text);
 
@@ -130,6 +136,7 @@ class Model {
             case GLOBALS.QOCCUPATION:
                 currentPerson.setOccupation(parseOccupation(text));
                 text = cleanse(text);
+                 c.say("That sounds boring.");
 
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I'm a machine... Isn't it obvious?");
@@ -140,7 +147,7 @@ class Model {
             case GLOBALS.QHOMETOWN:
                 currentPerson.setHometown(parseHometown(text));
                 text = cleanse(text);
-
+                c.say("I've never even heard of that place.");
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I live in a far off, ditant land called Ford.");
                 }
@@ -150,7 +157,7 @@ class Model {
             case GLOBALS.QMAJOR:
                 currentPerson.setMajor(parseMajor(text));
                 text = cleanse(text);
-
+                c.say("Heh.");
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I'm a " + gatsbi.getMajor() + " major!");
                 }
@@ -160,7 +167,7 @@ class Model {
             case GLOBALS.QLIKES:
                 currentPerson.setLikes(parseLikes(text));
                 text = cleanse(text);
-
+                    c.say("How cute.");
                 if (text.contains("you") || text.contains("your")) {
                     c.say("Me? I like " + gatsbi.getLikes()+"!");
                 }
@@ -304,8 +311,16 @@ class Model {
     int parseAge(String text) { //find the number in text
         int returnMe = 0;
         String cleanText = text;
+
         cleanText = cleanText.replaceAll("[^0-9]", "");
+        if (cleanText == null){
+           c.say("Yeah, but how old are you?"); 
+           lastAskedQuestion = GLOBALS.QAGE;
+           return 0;
+           
+        }
         returnMe = Integer.parseInt(cleanText);
+        c.say("Wow, you don't look a day older than" + (currentPerson.getAge() - 1) +"!");
         return returnMe;
     }
 
@@ -501,6 +516,8 @@ class Model {
             keys.clear();
         }
         System.out.println(partOfSpeech);
+        
+       
     }
 
     private void createNewPerson(String name) { //create a new person with name
