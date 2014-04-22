@@ -6,14 +6,12 @@ package gatsbi;
 abstract class AbstractPerson {
 
     private String firstName = "";
-    private String middleName;
-    private String lastName;
-    private String gender;
+    private String lastName= "";
+    private String gender= "";
     private short occupation = GLOBALS.NULL;
-    private String hometown;
-    private String major;
+    private String hometown= "";
     private short age=0;
-    private String likes;
+    private String likes= "";
 
     private int cycleNum = 0;
 
@@ -26,42 +24,33 @@ abstract class AbstractPerson {
             case 0:
                 cycleNum++;
                 return getName();
-
+                
             case 1:
-                cycleNum++;
-                return getMidName();
-
-            case 2:
                 cycleNum++;
                 return getLastName();
 
-            case 3:
+            case 2:
                 cycleNum++;
                 return getGender();
-            case 4:
+            case 3:
                 cycleNum++;
                 return getOccupation();
 
-            case 5:
+            case 4:
                 cycleNum++;
                 return getHometown();
-            case 6:
-                cycleNum++;
-                getMajor();
-                break;
-            case 7:
+            
+            case 5:
                 cycleNum++;
                 return getAge();
-            case 8:
+            case 6:
                 cycleNum = 0;
                 return getLikes();
         }
         return '-';
     }
 
-    public String getMidName() {
-        return middleName;
-    }
+   
 
     public String getLastName() {
         return lastName;
@@ -79,9 +68,7 @@ abstract class AbstractPerson {
         return hometown;
     }
 
-    public String getMajor() {
-        return major;
-    }
+    
 
     public short getAge() {
         return age;
@@ -95,9 +82,7 @@ abstract class AbstractPerson {
         this.firstName = firstName;
     }
 
-    public void setMidName(String middleName) {
-        this.middleName = middleName;
-    }
+   
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
@@ -115,9 +100,7 @@ abstract class AbstractPerson {
         this.hometown = hometown;
     }
 
-    public void setMajor(String major) {
-        this.major = major;
-    }
+   
 
     public void setAge(short age) {
         this.age = age;
@@ -130,12 +113,10 @@ abstract class AbstractPerson {
     public String toString() {
         String returnMe = "I am a Foo: ";
         returnMe += "\tfirstName=" + getName();
-        returnMe += "\tmiddleName=" + getMidName();
         returnMe += "\tlastName=" + getLastName();
         returnMe += "\tgenderM=" + getGender();
         returnMe += "\toccupation=" + getOccupation();
         returnMe += "\thometown=" + getHometown();
-        returnMe += "\tmajor=" + getMajor();
         returnMe += "\tage=" + getAge();
         returnMe += "\tinterestingFact=" + getLikes();
         return returnMe;

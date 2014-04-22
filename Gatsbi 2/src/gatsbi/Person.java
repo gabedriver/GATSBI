@@ -17,12 +17,10 @@ class Person extends AbstractPerson {
 
     public Person(MyReader mr) {
         setName(mr.giveMeTheNextLine());
-        setMidName(mr.giveMeTheNextLine());
         setLastName(mr.giveMeTheNextLine());
         setGender(mr.giveMeTheNextLine());
         setOccupation((short) Integer.parseInt(mr.giveMeTheNextLine()));
         setHometown(mr.giveMeTheNextLine());
-        setMajor(mr.giveMeTheNextLine());
         setAge((short) Integer.parseInt(mr.giveMeTheNextLine()));
         setLikes(mr.giveMeTheNextLine());
 
