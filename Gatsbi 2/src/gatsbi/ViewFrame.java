@@ -22,11 +22,18 @@ public class ViewFrame extends javax.swing.JFrame {
         }
         setVisible(true);
         inputTF.requestFocus();
+        bypassBox.setSelected(true);
+        
     }
 
     public ViewFrame(Controller c) {
         this();
         this.c = c;
+        if(bypassBox.isSelected()){
+            GLOBALS.bypass = true;
+        } else {
+            GLOBALS.bypass = false;
+        }
     }
 
     /**
@@ -41,6 +48,7 @@ public class ViewFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         outputTA = new javax.swing.JTextArea();
         resetButton = new javax.swing.JButton();
+        bypassBox = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -76,6 +84,16 @@ public class ViewFrame extends javax.swing.JFrame {
         getContentPane().add(resetButton);
         resetButton.setBounds(0, 0, 78, 29);
 
+        bypassBox.setForeground(new java.awt.Color(255, 255, 255));
+        bypassBox.setText("ByPass");
+        bypassBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bypassBoxActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bypassBox);
+        bypassBox.setBounds(80, 0, 106, 23);
+
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gatsbi/gatsby.jpg"))); // NOI18N
         getContentPane().add(jLabel1);
         jLabel1.setBounds(0, 0, 630, 420);
@@ -105,6 +123,14 @@ public class ViewFrame extends javax.swing.JFrame {
         inputTF.setText("");
         inputTF.requestFocus();
     }//GEN-LAST:event_resetButtonActionPerformed
+
+    private void bypassBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bypassBoxActionPerformed
+        if(bypassBox.isSelected()){
+            GLOBALS.bypass = true;
+        } else {
+            GLOBALS.bypass = false;
+        }
+    }//GEN-LAST:event_bypassBoxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -141,6 +167,7 @@ public class ViewFrame extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox bypassBox;
     private javax.swing.JTextField inputTF;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;

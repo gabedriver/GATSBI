@@ -4,6 +4,8 @@ package gatsbi;
  * GLOBALS.java created by thigley on Apr 3, 2014 at 1:33:30 PM
  */
 public class GLOBALS {
+    static boolean bypass = true;
+    
     // occupation
     static final short MACHINE = 0;
     static final short STUDENT = 1;

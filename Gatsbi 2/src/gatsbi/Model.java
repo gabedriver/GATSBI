@@ -58,7 +58,7 @@ class Model {
         b = true;
 
     }
-
+    
     public String toString() {
         String returnMe = "I am a Model, please fill in my variables so I can be debugged.";
 
@@ -79,13 +79,14 @@ class Model {
         getResponse(text);
         //probe/continue
 
+       
     }
 
     private void getResponse(String text) {
         switch (lastAskedQuestion) {
             case GLOBALS.START:
                 c.say(responses.get("hello")[(int) (Math.random() * 10)]);
-                askQuestion();
+askQuestion();
                 break;
 
             case GLOBALS.QNAME: //we should ask about a friend during a conversation instead of right after he asks for your name... like "I'm bored of this conversation, let's talk about something else. Do you have any friends?"
@@ -146,7 +147,7 @@ class Model {
             case GLOBALS.QOCCUPATION:
                 currentPerson.setOccupation(parseOccupation(text));
                 text = cleanse(text);
-                
+
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I'm a machine... Isn't it obvious?");
                 }
@@ -440,6 +441,7 @@ class Model {
         }
 
         if ((text.contains("your") || text.contains("you")) && text.contains("name")) {
+
             c.say("My name is " + gatsbi.getName());
             return;
         }
@@ -454,7 +456,8 @@ class Model {
 
         if (!QQ.isEmpty()) {
             askQuestion();
-            return;}
+            return;
+        }
         
             String[] choices = responses.get("NOKEYFOUND");
             c.say(choices[(int) (Math.random() * choices.length)]);
@@ -475,6 +478,7 @@ class Model {
             }
         }
 
+        System.out.println(pos);
         return returnMe;
     }
 
@@ -533,6 +537,7 @@ class Model {
         if (mw != null){
 
         if (currentPerson.getName().isEmpty()) {
+        
             mw.println("-");
         } else {
             mw.println(currentPerson.getName());
@@ -560,12 +565,15 @@ class Model {
             mw.println(currentPerson.getHometown());
         }
 
+
         if (currentPerson.getAge() == 0) {
             mw.println("-");
         } else {
             mw.println("" + currentPerson.getAge());
         }
+
         if (currentPerson.getLikes().isEmpty()) {
+
             mw.println("-");
         } else {
             mw.println(currentPerson.getLikes());
