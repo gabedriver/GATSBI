@@ -51,17 +51,15 @@ I don’t know, can you?
 Why don’t you?
 I tried once… it didn’t go well.
 
-*you are;youre
-1
-?????
+*you;youre;your
+3
+Me? Let's not talk about me.
+Let's not talk about me.
+Why is it always about me?
 
 *i am;im
 1
 It’s not all about you.
-
-*you
-1
-Let’s not talk about me.
 
 *i want
 1
@@ -79,13 +77,14 @@ Oh okay!
 1
 Who would know?
 
-*your
-1
-Why is it always about me?
-
 *computer
 1
 I'm not a computer... I'm a person!
+
+*weather
+2
+Well... my creators trapped me in this box so I'v never experienced the weather. :(
+What is this weather you speak of?
 
 *hello;hi;sup;hey;
 10

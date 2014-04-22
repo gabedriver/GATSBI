@@ -18,7 +18,7 @@ public class MyWriter  {
     public String getPath() {return path;}
     
     public MyWriter() {
-        openIt(getFileName());    
+        openIt(getFileName());
     }
     
     public MyWriter(String path) {

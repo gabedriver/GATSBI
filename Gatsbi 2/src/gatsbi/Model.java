@@ -1,6 +1,7 @@
 package gatsbi;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,6 +13,7 @@ class Model {
 
     Controller c;
     private HashMap<String, String[]> responses = new HashMap<>();
+    private HashMap<String, Integer> partOfSpeech = new HashMap<>();
     private Self gatsbi;
     private Person currentPerson;
     private Person friend;
@@ -19,7 +21,7 @@ class Model {
     boolean personIsNew = false;
     MyReader mr = new MyReader();
     MyWriter mw;
-
+    
     Model(Controller c) {
         this.c = c;
         loadResponses();
@@ -348,7 +350,9 @@ class Model {
         text = text.replaceAll("about ", "");
         text = text.replaceAll("you", "");
 //        System.out.println(text);
-
+        if (personExists(text)) {
+            foundSelf(getPerson(text));
+        }
         String[] words = text.split(" ");
         for (int i = 0; i < words.length; i++) {
             words[i] = (char) (words[i].charAt(0) - diff) + words[i].substring(1);
@@ -441,10 +445,18 @@ class Model {
 
     private void tryToAnswer(String text) { //uses the first word of a question sentence to determine a generic answer.
         text = text.toLowerCase();
-        text = text.replaceAll("[^a-z ]", "");
-
+        text = text.replaceAll("'", "");
+        text = text.replaceAll("[^a-z ]", " ");
+        text = " " + text + " ";
+       
+        
+        if(text.contains("your") || text.contains("you") && text.contains("name")){
+            c.say("My name is " + gatsbi.getName());
+            return;
+        }
+        
         for (String next : responses.keySet()) {
-            if (text.contains(next)) {
+            if (text.contains(" " + next + " ")) {
                 String[] choices = responses.get(next);
                 c.say(choices[(int) (Math.random() * choices.length)]);
                 return;
@@ -467,8 +479,28 @@ class Model {
                 nextResponses[i] = rr.giveMeTheNextLine();
             }
             rr.giveMeTheNextLine();
-            responses.put(nextKey, nextResponses);
+            String[] allKeys = nextKey.split(";");
+            for (int i = 0; i < allKeys.length; i++) {
+                responses.put(allKeys[i], nextResponses);
+            }
         }
+        
+        MyReader theOtherReader = new MyReader("PartsOfSpeech");
+        ArrayList<String> keys = new ArrayList<String>();
+        int value = 0;
+        while(theOtherReader.hasMoreData()){
+            String input = theOtherReader.giveMeTheNextLine();
+            if(!input.contains("1")){
+                keys.add(input);
+                continue;
+            }
+            value = Integer.parseInt(theOtherReader.giveMeTheNextLine());
+            for (String string : keys) {
+                partOfSpeech.put(string, value);
+            }
+            keys.clear();
+        }
+        System.out.println(partOfSpeech);
     }
 
     private void createNewPerson(String name) { //create a new person with name

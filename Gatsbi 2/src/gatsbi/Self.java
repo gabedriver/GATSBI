@@ -18,8 +18,4 @@ class Self extends AbstractPerson{
     
     }
 
-
-  
-    
-    
 }
