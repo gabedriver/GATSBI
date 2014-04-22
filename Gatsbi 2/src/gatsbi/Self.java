@@ -7,13 +7,14 @@ class Self extends AbstractPerson{
     
     Self(){
     setName("GATSBI");
-    setMidName("The");
-    setLastName("Robot");
+    setMidName("Master of");
+    setLastName("All");
     setGenderM(true);
     setOccupation(GLOBALS.MACHINE);
     setHometown("Ford 202");
-    setMajor(GLOBALS.CS);
+    setMajor("Sciences of Super Subtle Sensual Sexy Studies");
     setAge((short)1); 
+    setLikes("people");
     
     }
 

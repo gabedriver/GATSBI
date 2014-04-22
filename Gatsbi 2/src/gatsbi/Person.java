@@ -9,6 +9,7 @@ import java.util.Stack;
 class Person extends AbstractPerson {
 
     Stack<String> inputs = new Stack<String>();
+    
 
     public Person() {
 
@@ -21,12 +22,14 @@ class Person extends AbstractPerson {
         setGenderM(Integer.parseInt(mr.giveMeTheNextLine()) == 1);
         setOccupation((short) Integer.parseInt(mr.giveMeTheNextLine()));
         setHometown(mr.giveMeTheNextLine());
-        setMajor((short) Integer.parseInt(mr.giveMeTheNextLine()));
+        setMajor(mr.giveMeTheNextLine());
         setAge((short) Integer.parseInt(mr.giveMeTheNextLine()));
         setLikes(mr.giveMeTheNextLine());
 
     }
 
+    
+    
     public String toString() {
         String returnMe = "I am a Person, please fill in my variables so I can be debugged.";
 

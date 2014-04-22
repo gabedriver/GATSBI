@@ -2,6 +2,8 @@ package gatsbi;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * ViewFrame.java created by thigley on Apr 3, 2014 at 1:54:54 PM
@@ -145,6 +147,10 @@ public class ViewFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     void say(String output) {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            System.out.println("nope.");        }
         outputTA.append("GATSBI: " + output + "\n");
         outputTA.setCaretPosition(outputTA.getDocument().getLength());
     }

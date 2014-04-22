@@ -11,12 +11,52 @@ abstract class AbstractPerson {
     private boolean genderM;
     private short occupation;
     private String hometown;
-    private short major;
+    private String major;
     private short age;
     private String likes;
 
+    private int cycleNum = 0;
+
     public String getName() {
         return firstName;
+    }
+
+    Object getNext() {
+        switch (cycleNum) {
+            case 0:
+                cycleNum++;
+                return getName();
+
+            case 1:
+                cycleNum++;
+                return getMidName();
+
+            case 2:
+                cycleNum++;
+                return getLastName();
+
+            case 3:
+                cycleNum++;
+                return getGenderM();
+            case 4:
+                cycleNum++;
+                return getOccupation();
+
+            case 5:
+                cycleNum++;
+                return getHometown();
+            case 6:
+                cycleNum++;
+                getMajor();
+                break;
+            case 7:
+                cycleNum++;
+                return getAge();
+            case 8:
+                cycleNum = 0;
+                return getLikes();
+        }
+        return '-';
     }
 
     public String getMidName() {
@@ -39,7 +79,7 @@ abstract class AbstractPerson {
         return hometown;
     }
 
-    public short getMajor() {
+    public String getMajor() {
         return major;
     }
 
@@ -75,7 +115,7 @@ abstract class AbstractPerson {
         this.hometown = hometown;
     }
 
-    public void setMajor(short major) {
+    public void setMajor(String major) {
         this.major = major;
     }
 
