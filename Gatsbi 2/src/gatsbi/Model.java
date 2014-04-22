@@ -3,6 +3,7 @@ package gatsbi;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,6 +15,8 @@ class Model {
     Controller c;
     private HashMap<String, String[]> responses = new HashMap<>();
     private HashMap<String, Integer> partOfSpeech = new HashMap<>();
+    PriorityQueue<Question> QQ = new PriorityQueue<>();
+    // People
     private Self gatsbi;
     private Person currentPerson;
     private Person friend;
@@ -21,12 +24,33 @@ class Model {
     boolean personIsNew = false;
     MyReader mr = new MyReader();
     MyWriter mw;
-    
+
     Model(Controller c) {
         this.c = c;
         loadResponses();
         currentPerson = new Person();
         gatsbi = new Self();
+        loadQQ();
+    }
+
+    public void loadQQ() {
+        MyReader qr = new MyReader("questions");
+        while (qr.hasMoreData()) {
+            Question next = new Question();
+            next.questionNumber = (short) Integer.parseInt(qr.giveMeTheNextLine());
+            next.theQuestion = qr.giveMeTheNextLine();
+            qr.giveMeTheNextLine();
+            QQ.add(next);
+        }
+    }
+
+    public void askQuestion() {
+        if (!QQ.isEmpty()) {
+            Question nextQuestion = QQ.poll();
+
+            lastAskedQuestion = nextQuestion.questionNumber;
+            c.say(nextQuestion.theQuestion);
+        }
     }
 
     public String toString() {
@@ -48,7 +72,9 @@ class Model {
         currentPerson.inputs.add(text);
         getResponse(text);
         //probe/continue
-
+        if (!GLOBALS.bypass) {
+            askQuestion();
+        }
     }
 
     private void askName() {
@@ -64,10 +90,7 @@ class Model {
     private void getResponse(String text) {
         switch (lastAskedQuestion) {
             case GLOBALS.START:
-                c.say("Hello."); //Change it up a bit. Hello, hey, what's up..
-
-                askName();
-
+                c.say(responses.get("hello")[(int) (Math.random() * 10)]);
                 break;
 
             case GLOBALS.QNAME: //we should ask about a friend during a conversation instead of right after he asks for your name... like "I'm bored of this conversation, let's talk about something else. Do you have any friends?"
@@ -77,23 +100,11 @@ class Model {
                 }
                 if (personIsNew) {
                     c.say("Oh, I haven't met you before! We should get to know each other!");
-                    askMidName();
                     break;
-                }else {
-                 c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");    
+                } else {
+                    c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");
                 }
-                askFriend();
                 lastAskedQuestion = GLOBALS.QFRIEND;
-                break;
-
-            case GLOBALS.QMIDNAME:
-                currentPerson.setMidName(parseMidLast(text));
-                c.say("That's an interesting middle name...");
-                text = cleanse(text);
-                if (text.contains("you") || text.contains("your")) {
-                    c.say("Mine is " + gatsbi.getMidName()+".");
-                }
-                askLastName();
                 break;
 
             case GLOBALS.QLASTNAME:
@@ -103,9 +114,8 @@ class Model {
                 text = cleanse(text);
 
                 if (text.contains("you") || text.contains("your")) {
-                    c.say("Mine is " + gatsbi.getLastName()+"!");
+                    c.say("Mine is " + gatsbi.getLastName() + "!");
                 }
-                askAge();
                 break;
 
             case GLOBALS.QAGE:
@@ -116,7 +126,6 @@ class Model {
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I'm " + gatsbi.getAge() + ".");
                 }
-                askGender();
                 break;
 
             case GLOBALS.QGENDER:
@@ -133,18 +142,16 @@ class Model {
                     c.say("I'm a machine programmed to be male.");
                 }
 
-                askOccupation();
                 break;
 
             case GLOBALS.QOCCUPATION:
                 currentPerson.setOccupation(parseOccupation(text));
                 text = cleanse(text);
-                 c.say("That sounds boring.");
+                c.say("That sounds boring.");
 
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I'm a machine... Isn't it obvious?");
                 }
-                askHometown();
                 break;
 
             case GLOBALS.QHOMETOWN:
@@ -154,29 +161,17 @@ class Model {
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I live in a far off, ditant land called Ford.");
                 }
-                askMajor();
-                break;
-
-            case GLOBALS.QMAJOR:
-                currentPerson.setMajor(parseMajor(text));
-                text = cleanse(text);
-                c.say("Heh.");
-                if (text.contains("you") || text.contains("your")) {
-                    c.say("I'm a " + gatsbi.getMajor() + " major!");
-                }
-                askLikes();
                 break;
 
             case GLOBALS.QLIKES:
                 currentPerson.setLikes(parseLikes(text));
                 text = cleanse(text);
-                    c.say("How cute.");
+                c.say("How cute.");
                 if (text.contains("you") || text.contains("your")) {
-                    c.say("Me? I like " + gatsbi.getLikes()+"!");
+                    c.say("Me? I like " + gatsbi.getLikes() + "!");
                 }
                 printPerson();
                 c.say("Now I know all about you! Let's talk about your friends now.");
-                askFriend();
                 break;
 
             case GLOBALS.QFRIEND:
@@ -217,30 +212,6 @@ class Model {
         returnMe = returnMe.replaceAll("how ", "");
         returnMe = returnMe.replaceAll("about ", "");
         returnMe = returnMe.replaceAll("you ", "");
-
-        return returnMe;
-    }
-
-    private String parseMajor(String text) {
-        String returnMe = text;
-
-        returnMe = cleanse(returnMe);
-        returnMe = returnMe.replaceAll("i ", "");
-        returnMe = returnMe.replaceAll("am ", "");
-        returnMe = returnMe.replaceAll("a ", "");
-        returnMe = returnMe.replaceAll("an ", "");
-        returnMe = returnMe.replaceAll("major ", "");
-        returnMe = returnMe.replaceAll("im ", "");
-        returnMe = returnMe.replaceAll("its ", "");
-        returnMe = returnMe.replaceAll("it ", "");
-        returnMe = returnMe.replaceAll("is ", "");
-        returnMe = returnMe.replaceAll("whats ", "");
-        returnMe = returnMe.replaceAll("what ", "");
-        returnMe = returnMe.replaceAll("yours", "");
-        returnMe = returnMe.replaceAll("your ", "");
-        returnMe = returnMe.replaceAll("how ", "");
-        returnMe = returnMe.replaceAll("about ", "");
-        returnMe = returnMe.replaceAll("you", "");
 
         return returnMe;
     }
@@ -316,14 +287,14 @@ class Model {
         String cleanText = text;
 
         cleanText = cleanText.replaceAll("[^0-9]", "");
-        if (cleanText == null){
-           c.say("Yeah, but how old are you?"); 
-           lastAskedQuestion = GLOBALS.QAGE;
-           return 0;
-           
+        if (cleanText.isEmpty()) {
+            c.say("Yeah, but how old are you?");
+            lastAskedQuestion = GLOBALS.QAGE;
+            return 0;
+
         }
         returnMe = Integer.parseInt(cleanText);
-        c.say("Wow, you don't look a day older than" + (currentPerson.getAge() - 1) +"!");
+        c.say("Wow, you don't look a day older than " + (currentPerson.getAge() - 1) + "!");
         return returnMe;
     }
 
@@ -465,16 +436,16 @@ class Model {
         text = text.replaceAll("'", "");
         text = text.replaceAll("[^a-z ]", " ");
         text = " " + text + " ";
-        
-        if(tryToUnderstand(text)){
+
+        if (tryToUnderstand(text)) {
             return;
         }
 
-        if(text.contains("your") || text.contains("you") && text.contains("name")){
+        if (text.contains("your") || text.contains("you") && text.contains("name")) {
             c.say("My name is " + gatsbi.getName());
             return;
         }
-        
+
         for (String next : responses.keySet()) {
             if (text.contains(" " + next + " ")) {
                 String[] choices = responses.get(next);
@@ -485,22 +456,22 @@ class Model {
         String[] choices = responses.get("NOKEYFOUND");
         c.say(choices[(int) (Math.random() * choices.length)]);
     }
-    
-    private boolean tryToUnderstand(String text){
+
+    private boolean tryToUnderstand(String text) {
         boolean returnMe = false;
-        String newText = text.substring(1,text.length()-1);
+        String newText = text.substring(1, text.length() - 1);
         String[] scentence = newText.split(" ");
         ArrayList<String> pos = new ArrayList<String>();
-            for (String string : scentence) {
-                if(partOfSpeech.containsKey(string)){
-                    returnMe = true;
-                    pos.add("" + partOfSpeech.get(string));
-                } else {
-                    pos.add("" + 0);
-                }
+        for (String string : scentence) {
+            if (partOfSpeech.containsKey(string)) {
+                returnMe = true;
+                pos.add("" + partOfSpeech.get(string));
+            } else {
+                pos.add("" + 0);
             }
-            System.out.println(pos);
-        return returnMe;    
+        }
+        System.out.println(pos);
+        return returnMe;
     }
 
     private void loadResponses() {
@@ -521,13 +492,13 @@ class Model {
                 responses.put(allKeys[i], nextResponses);
             }
         }
-        
+
         MyReader theOtherReader = new MyReader("PartsOfSpeech");
         ArrayList<String> keys = new ArrayList<String>();
         int value = 0;
-        while(theOtherReader.hasMoreData()){
+        while (theOtherReader.hasMoreData()) {
             String input = theOtherReader.giveMeTheNextLine();
-            if(!input.contains("1")){
+            if (!input.contains("1")) {
                 keys.add(input);
                 continue;
             }
@@ -537,9 +508,6 @@ class Model {
             }
             keys.clear();
         }
-        System.out.println(partOfSpeech);
-        
-       
     }
 
     private void createNewPerson(String name) { //create a new person with name
@@ -551,102 +519,54 @@ class Model {
 
     }
 
-    private void askMidName() {
-
-        c.say("What's your middle name?");
-        lastAskedQuestion = GLOBALS.QMIDNAME;
-    }
-
-    private void askLastName() {
-
-        c.say("What's your last name?");
-        lastAskedQuestion = GLOBALS.QLASTNAME;
-    }
-
-    private void askGender() {
-
-        c.say("Are you male of female?");
-        lastAskedQuestion = GLOBALS.QGENDER;
-    }
-
-    private void askOccupation() {
-
-        c.say("What's your occupation?");
-        lastAskedQuestion = GLOBALS.QOCCUPATION;
-    }
-
-    private void askHometown() {
-
-        c.say("What's your hometown?");
-        lastAskedQuestion = GLOBALS.QHOMETOWN;
-    }
-
-    private void askMajor() {
-
-        c.say("What's your major?");
-        lastAskedQuestion = GLOBALS.QMAJOR;
-    }
-
-    private void askAge() {
-
-        c.say("What's your age?");
-        lastAskedQuestion = GLOBALS.QAGE;
-    }
-
-    private void askLikes() {
-
-        c.say("What do you like?");
-        lastAskedQuestion = GLOBALS.QLIKES;
-    }
-
     private void printPerson() {
 //        for (int i = 0; i < 8; i++) {
 //            mw.println(""+currentPerson.getNext());
 //        }
-if (currentPerson.getName() == null) {
+        if (currentPerson.getName() == null) {
             mw.println("-");
-        }else{
-    mw.println(currentPerson.getName());
-}
-if (currentPerson.getMidName() == null) {
+        } else {
+            mw.println(currentPerson.getName());
+        }
+        if (currentPerson.getMidName() == null) {
             mw.println("-");
-        }else{
-        mw.println(currentPerson.getMidName());
-}
-if (currentPerson.getLastName() == null) {
+        } else {
+            mw.println(currentPerson.getMidName());
+        }
+        if (currentPerson.getLastName() == null) {
             mw.println("-");
-        }else{
-    mw.println(currentPerson.getLastName());
-}
-       
-mw.println(currentPerson.getGender());
+        } else {
+            mw.println(currentPerson.getLastName());
+        }
 
-if (currentPerson.getOccupation() == GLOBALS.NULL) {
+        mw.println(currentPerson.getGender());
+
+        if (currentPerson.getOccupation() == GLOBALS.NULL) {
             mw.println("-");
-        }else{
-        mw.println("" + currentPerson.getOccupation());
-}
-if (currentPerson.getHometown() == null) {
+        } else {
+            mw.println("" + currentPerson.getOccupation());
+        }
+        if (currentPerson.getHometown() == null) {
             mw.println("-");
-        }else{
-        mw.println(currentPerson.getHometown());
-}
-if (currentPerson.getMajor() == null) {
+        } else {
+            mw.println(currentPerson.getHometown());
+        }
+        if (currentPerson.getMajor() == null) {
             mw.println("-");
-        }else{
-        mw.println("" + currentPerson.getMajor());
-}
-if (currentPerson.getAge() == 0) {
+        } else {
+            mw.println("" + currentPerson.getMajor());
+        }
+        if (currentPerson.getAge() == 0) {
             mw.println("-");
-        }else{
-        mw.println("" + currentPerson.getAge());
-}
-if (currentPerson.getLikes() == null) {
+        } else {
+            mw.println("" + currentPerson.getAge());
+        }
+        if (currentPerson.getLikes() == null) {
             mw.println("-");
-        }else{
-        mw.println(currentPerson.getLikes());
-}
-        
+        } else {
+            mw.println(currentPerson.getLikes());
+        }
+
         mw.close();
 
     }
