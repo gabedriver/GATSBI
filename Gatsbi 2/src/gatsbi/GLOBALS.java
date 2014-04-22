@@ -79,6 +79,7 @@ public class GLOBALS {
     static final short QFRIEND = 8;  
     static final short QMIDNAME = 9;
     static final short QLASTNAME = 10;
+    static final short QDOIKNOWYOU = 11;
     
     
     

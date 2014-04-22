@@ -64,8 +64,7 @@ class Model {
     private void getResponse(String text) {
         switch (lastAskedQuestion) {
             case GLOBALS.START:
-                c.say("Hello."); //Change it up a bit. Hello, hey, what's up..
-
+                c.say(responses.get("hello")[(int)(Math.random()*10)]);
                 askName();
 
                 break;
@@ -80,7 +79,7 @@ class Model {
                     askMidName();
                     break;
                 }else {
-                 c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");    
+                 c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");  
                 }
                 askFriend();
                 lastAskedQuestion = GLOBALS.QFRIEND;
@@ -316,14 +315,14 @@ class Model {
         String cleanText = text;
 
         cleanText = cleanText.replaceAll("[^0-9]", "");
-        if (cleanText == null){
+        if (cleanText.isEmpty()){
            c.say("Yeah, but how old are you?"); 
            lastAskedQuestion = GLOBALS.QAGE;
            return 0;
            
         }
         returnMe = Integer.parseInt(cleanText);
-        c.say("Wow, you don't look a day older than" + (currentPerson.getAge() - 1) +"!");
+        c.say("Wow, you don't look a day older than " + (currentPerson.getAge() - 1) +"!");
         return returnMe;
     }
 
