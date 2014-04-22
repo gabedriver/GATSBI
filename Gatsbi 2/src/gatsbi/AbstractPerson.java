@@ -9,10 +9,10 @@ abstract class AbstractPerson {
     private String middleName;
     private String lastName;
     private boolean genderM;
-    private short occupation;
+    private short occupation = GLOBALS.NULL;
     private String hometown;
     private String major;
-    private short age;
+    private short age=0;
     private String likes;
 
     private int cycleNum = 0;

@@ -583,16 +583,50 @@ class Model {
 //        for (int i = 0; i < 8; i++) {
 //            mw.println(""+currentPerson.getNext());
 //        }
-
-        mw.println(currentPerson.getName());
+if (currentPerson.getName() == null) {
+            mw.println("-");
+        }else{
+    mw.println(currentPerson.getName());
+}
+if (currentPerson.getMidName() == null) {
+            mw.println("-");
+        }else{
         mw.println(currentPerson.getMidName());
-        mw.println(currentPerson.getLastName());
-        mw.println("" + (currentPerson.getGenderM() ? 1 : 0));
+}
+if (currentPerson.getLastName() == null) {
+            mw.println("-");
+        }else{
+    mw.println(currentPerson.getLastName());
+}
+       
+mw.println("" + (currentPerson.getGenderM() ? 1 : 0));
+
+if (currentPerson.getOccupation() == GLOBALS.NULL) {
+            mw.println("-");
+        }else{
         mw.println("" + currentPerson.getOccupation());
+}
+if (currentPerson.getHometown() == null) {
+            mw.println("-");
+        }else{
         mw.println(currentPerson.getHometown());
+}
+if (currentPerson.getMajor() == null) {
+            mw.println("-");
+        }else{
         mw.println("" + currentPerson.getMajor());
+}
+if (currentPerson.getAge() == 0) {
+            mw.println("-");
+        }else{
         mw.println("" + currentPerson.getAge());
+}
+if (currentPerson.getLikes() == null) {
+            mw.println("-");
+        }else{
         mw.println(currentPerson.getLikes());
+}
+        
         mw.close();
 
     }
