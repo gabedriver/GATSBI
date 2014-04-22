@@ -488,8 +488,8 @@ class Model {
     
     private boolean tryToUnderstand(String text){
         boolean returnMe = false;
-        String[] scentence = text.split(" ");
-        
+        String newText = text.substring(1,text.length()-1);
+        String[] scentence = newText.split(" ");
         ArrayList<String> pos = new ArrayList<String>();
             for (String string : scentence) {
                 if(partOfSpeech.containsKey(string)){
@@ -499,7 +499,7 @@ class Model {
                     pos.add("" + 0);
                 }
             }
-            System.out.println(pos);
+            
         return returnMe;
     }
 
