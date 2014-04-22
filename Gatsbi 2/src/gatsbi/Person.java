@@ -19,7 +19,7 @@ class Person extends AbstractPerson {
         setName(mr.giveMeTheNextLine());
         setMidName(mr.giveMeTheNextLine());
         setLastName(mr.giveMeTheNextLine());
-        setGenderM(Integer.parseInt(mr.giveMeTheNextLine()) == 1);
+        setGender(mr.giveMeTheNextLine());
         setOccupation((short) Integer.parseInt(mr.giveMeTheNextLine()));
         setHometown(mr.giveMeTheNextLine());
         setMajor(mr.giveMeTheNextLine());
