@@ -94,7 +94,7 @@ public class ViewFrame extends javax.swing.JFrame {
             public void run() {
                 c.parse(input);
             }
-        }, 1000);
+        }, 1);
     }//GEN-LAST:event_inputTFActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
