@@ -41,6 +41,7 @@ public class ViewFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         outputTA = new javax.swing.JTextArea();
         resetButton = new javax.swing.JButton();
+        jCheckBox1 = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -76,6 +77,16 @@ public class ViewFrame extends javax.swing.JFrame {
         getContentPane().add(resetButton);
         resetButton.setBounds(0, 0, 78, 29);
 
+        jCheckBox1.setForeground(new java.awt.Color(255, 255, 255));
+        jCheckBox1.setText("ByPass");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jCheckBox1);
+        jCheckBox1.setBounds(80, 0, 106, 23);
+
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gatsbi/gatsby.jpg"))); // NOI18N
         getContentPane().add(jLabel1);
         jLabel1.setBounds(0, 0, 630, 420);
@@ -105,6 +116,10 @@ public class ViewFrame extends javax.swing.JFrame {
         inputTF.setText("");
         inputTF.requestFocus();
     }//GEN-LAST:event_resetButtonActionPerformed
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -142,6 +157,7 @@ public class ViewFrame extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField inputTF;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea outputTA;

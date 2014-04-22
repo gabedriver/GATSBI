@@ -499,8 +499,8 @@ class Model {
                     pos.add("" + 0);
                 }
             }
-            
-        return returnMe;
+            System.out.println(pos);
+        return returnMe;    
     }
 
     private void loadResponses() {
