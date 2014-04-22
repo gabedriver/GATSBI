@@ -465,8 +465,11 @@ class Model {
         text = text.replaceAll("'", "");
         text = text.replaceAll("[^a-z ]", " ");
         text = " " + text + " ";
-       
         
+        if(tryToUnderstand(text)){
+            return;
+        }
+
         if(text.contains("your") || text.contains("you") && text.contains("name")){
             c.say("My name is " + gatsbi.getName());
             return;
@@ -481,6 +484,23 @@ class Model {
         }
         String[] choices = responses.get("NOKEYFOUND");
         c.say(choices[(int) (Math.random() * choices.length)]);
+    }
+    
+    private boolean tryToUnderstand(String text){
+        boolean returnMe = false;
+        String[] scentence = text.split(" ");
+        
+        ArrayList<String> pos = new ArrayList<String>();
+            for (String string : scentence) {
+                if(partOfSpeech.containsKey(string)){
+                    returnMe = true;
+                    pos.add("" + partOfSpeech.get(string));
+                } else {
+                    pos.add("" + 0);
+                }
+            }
+            System.out.println(pos);
+        return returnMe;
     }
 
     private void loadResponses() {
