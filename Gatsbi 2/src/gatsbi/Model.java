@@ -121,10 +121,10 @@ class Model {
 
             case GLOBALS.QGENDER:
                 if (text.contains("woman") || text.contains("female") || text.contains("lady") || text.contains("girl")) {
-                    currentPerson.setGenderM(false);
+                    currentPerson.setGender("female");
                     c.say("That's nice. I definitely relate better to females.");
                 } else if (text.contains("man") || text.contains("male") || text.contains("guy") || text.contains("boy")) {
-                    currentPerson.setGenderM(true);
+                    currentPerson.setGender("male");
                     c.say("That's nice. I definitely relate better to males.");
                 }
                 text = cleanse(text);
@@ -603,16 +603,50 @@ class Model {
 //        for (int i = 0; i < 8; i++) {
 //            mw.println(""+currentPerson.getNext());
 //        }
-
-        mw.println(currentPerson.getName());
+if (currentPerson.getName() == null) {
+            mw.println("-");
+        }else{
+    mw.println(currentPerson.getName());
+}
+if (currentPerson.getMidName() == null) {
+            mw.println("-");
+        }else{
         mw.println(currentPerson.getMidName());
-        mw.println(currentPerson.getLastName());
-        mw.println("" + (currentPerson.getGenderM() ? 1 : 0));
+}
+if (currentPerson.getLastName() == null) {
+            mw.println("-");
+        }else{
+    mw.println(currentPerson.getLastName());
+}
+       
+mw.println(currentPerson.getGender());
+
+if (currentPerson.getOccupation() == GLOBALS.NULL) {
+            mw.println("-");
+        }else{
         mw.println("" + currentPerson.getOccupation());
+}
+if (currentPerson.getHometown() == null) {
+            mw.println("-");
+        }else{
         mw.println(currentPerson.getHometown());
+}
+if (currentPerson.getMajor() == null) {
+            mw.println("-");
+        }else{
         mw.println("" + currentPerson.getMajor());
+}
+if (currentPerson.getAge() == 0) {
+            mw.println("-");
+        }else{
         mw.println("" + currentPerson.getAge());
+}
+if (currentPerson.getLikes() == null) {
+            mw.println("-");
+        }else{
         mw.println(currentPerson.getLikes());
+}
+        
         mw.close();
 
     }

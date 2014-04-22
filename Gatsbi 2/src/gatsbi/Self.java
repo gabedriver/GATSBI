@@ -9,7 +9,7 @@ class Self extends AbstractPerson{
     setName("GATSBI");
     setMidName("Master of");
     setLastName("All");
-    setGenderM(true);
+    setGender("COMPUTER");
     setOccupation(GLOBALS.MACHINE);
     setHometown("Ford 202");
     setMajor("Sciences of Super Subtle Sensual Sexy Studies");

@@ -8,11 +8,11 @@ abstract class AbstractPerson {
     private String firstName = "";
     private String middleName;
     private String lastName;
-    private boolean genderM;
-    private short occupation;
+    private String gender;
+    private short occupation = GLOBALS.NULL;
     private String hometown;
     private String major;
-    private short age;
+    private short age=0;
     private String likes;
 
     private int cycleNum = 0;
@@ -37,7 +37,7 @@ abstract class AbstractPerson {
 
             case 3:
                 cycleNum++;
-                return getGenderM();
+                return getGender();
             case 4:
                 cycleNum++;
                 return getOccupation();
@@ -67,8 +67,8 @@ abstract class AbstractPerson {
         return lastName;
     }
 
-    public boolean getGenderM() {
-        return genderM;
+    public String getGender() {
+        return gender;
     }
 
     public short getOccupation() {
@@ -103,8 +103,8 @@ abstract class AbstractPerson {
         this.lastName = lastName;
     }
 
-    public void setGenderM(boolean genderM) {
-        this.genderM = genderM;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public void setOccupation(short occupation) {
@@ -132,7 +132,7 @@ abstract class AbstractPerson {
         returnMe += "\tfirstName=" + getName();
         returnMe += "\tmiddleName=" + getMidName();
         returnMe += "\tlastName=" + getLastName();
-        returnMe += "\tgenderM=" + getGenderM();
+        returnMe += "\tgenderM=" + getGender();
         returnMe += "\toccupation=" + getOccupation();
         returnMe += "\thometown=" + getHometown();
         returnMe += "\tmajor=" + getMajor();
