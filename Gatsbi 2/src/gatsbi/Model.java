@@ -65,6 +65,7 @@ class Model {
         switch (lastAskedQuestion) {
             case GLOBALS.START:
                 c.say("Hello."); //Change it up a bit. Hello, hey, what's up..
+
                 askName();
 
                 break;
@@ -78,6 +79,8 @@ class Model {
                     c.say("Oh, I haven't met you before! We should get to know each other!");
                     askMidName();
                     break;
+                }else {
+                 c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");    
                 }
                 askFriend();
                 lastAskedQuestion = GLOBALS.QFRIEND;
@@ -441,7 +444,6 @@ class Model {
     private void foundSelf(File file) { //now ask questions about the current user. eg "How are your CS Classes going?"
         MyReader self = new MyReader(file);
         currentPerson = new Person(self);
-        c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");
     }
 
     private void foundFriend(File next) { //spit out some relevent info about the person, or ask more questions about the person to fill in variables.

@@ -17,7 +17,7 @@ public class ViewFrame extends javax.swing.JFrame {
         setSize(630, 473);
         setTitle("Gabriel Andrew and Tyler's System of Basic Intelligence");
         System.out.println(System.getProperty("os.name"));
-        if(System.getProperty("os.name").contains("Windows")){
+        if (System.getProperty("os.name").contains("Windows")) {
             setSize(630, 487);
         }
         setVisible(true);
@@ -90,11 +90,14 @@ public class ViewFrame extends javax.swing.JFrame {
 
         new Timer().schedule(
                 new TimerTask() {
-            @Override
-            public void run() {
-                c.parse(input);
-            }
-        }, 1000);
+                    @Override
+                    public void run() {
+                        c.parse(input);
+
+                    }
+                }, 1);
+        
+
     }//GEN-LAST:event_inputTFActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
@@ -147,13 +150,12 @@ public class ViewFrame extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     void say(String output) {
-  
 
         try {
             Thread.sleep(1000);
         } catch (InterruptedException ex) {
-            System.out.println("nope.");        }
- 
+            System.out.println("nope.");
+        }
 
         outputTA.append("GATSBI: " + output + "\n");
         outputTA.setCaretPosition(outputTA.getDocument().getLength());
