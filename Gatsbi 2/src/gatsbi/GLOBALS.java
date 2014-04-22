@@ -14,9 +14,7 @@ public class GLOBALS {
     static final short WITS = 6;
     static final short SECRETARY = 7;
     static final short PRESIDENT = 8;
-
-        static final short NULL = 100;
-
+    
     // majors
     static final short ANTHRO = 0;
     static final short ARCHA = 1;
@@ -69,19 +67,16 @@ public class GLOBALS {
     //last asked question
     static final short START = -1;
     static final short NONE = 0;
-    static final short QNAME = 1;
-    static final short QGENDER = 2;
-    static final short QOCCUPATION = 3;
-    static final short QHOMETOWN = 4;
-    static final short QMAJOR = 5;
-    static final short QAGE = 6;
-    static final short QLIKES = 7;   
-    static final short QFRIEND = 8;  
-    static final short QMIDNAME = 9;
-    static final short QLASTNAME = 10;
-    static final short QDOIKNOWYOU = 11;
+    static final short QNAME = 10;
+    static final short QLASTNAME = 9;
+    static final short QGENDER = 8;
+    static final short QAGE = 7;
+    static final short QOCCUPATION = 6;
+    static final short QHOMETOWN = 5;
+    static final short QLIKES = 4;   
+    static final short QFRIEND = 3; 
     
-    
-    
+    static final short NULL = 100;
+        
     
 }

@@ -3,6 +3,7 @@ package gatsbi;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,6 +15,8 @@ class Model {
     Controller c;
     private HashMap<String, String[]> responses = new HashMap<>();
     private HashMap<String, Integer> partOfSpeech = new HashMap<>();
+    PriorityQueue<Question> QQ = new PriorityQueue<>();
+    // People
     private Self gatsbi;
     private Person currentPerson;
     private Person friend;
@@ -27,7 +30,29 @@ class Model {
         loadResponses();
         currentPerson = new Person();
         gatsbi = new Self();
+        loadQQ();
     }
+
+    public void loadQQ() {
+        MyReader qr = new MyReader("questions");
+        while (qr.hasMoreData()) {
+            Question next = new Question();
+            next.questionNumber = (short) Integer.parseInt(qr.giveMeTheNextLine());
+            next.theQuestion = qr.giveMeTheNextLine();
+            qr.giveMeTheNextLine();
+            QQ.add(next);
+        }
+    }
+
+    public void askQuestion() {
+        if (!QQ.isEmpty()) {
+            Question nextQuestion = QQ.poll();
+
+            lastAskedQuestion = nextQuestion.questionNumber;
+            c.say(nextQuestion.theQuestion);
+        }
+    }
+
 
     public String toString() {
         String returnMe = "I am a Model, please fill in my variables so I can be debugged.";
@@ -48,6 +73,7 @@ class Model {
         currentPerson.inputs.add(text);
         getResponse(text);
         //probe/continue
+        askQuestion();
 
     }
 
@@ -65,8 +91,6 @@ class Model {
         switch (lastAskedQuestion) {
             case GLOBALS.START:
                 c.say(responses.get("hello")[(int)(Math.random()*10)]);
-                askName();
-
                 break;
 
             case GLOBALS.QNAME: //we should ask about a friend during a conversation instead of right after he asks for your name... like "I'm bored of this conversation, let's talk about something else. Do you have any friends?"
@@ -76,25 +100,14 @@ class Model {
                 }
                 if (personIsNew) {
                     c.say("Oh, I haven't met you before! We should get to know each other!");
-                    askMidName();
                     break;
                 }else {
                  c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");  
                 }
-                askFriend();
                 lastAskedQuestion = GLOBALS.QFRIEND;
                 break;
 
-            case GLOBALS.QMIDNAME:
-                currentPerson.setMidName(parseMidLast(text));
-                c.say("That's an interesting middle name...");
-                text = cleanse(text);
-                if (text.contains("you") || text.contains("your")) {
-                    c.say("Mine is " + gatsbi.getMidName()+".");
-                }
-                askLastName();
-                break;
-
+            
             case GLOBALS.QLASTNAME:
                 currentPerson.setLastName(parseMidLast(text));
                 c.say("Your name is cool, but not as cool as mine.");
@@ -104,7 +117,6 @@ class Model {
                 if (text.contains("you") || text.contains("your")) {
                     c.say("Mine is " + gatsbi.getLastName()+"!");
                 }
-                askAge();
                 break;
 
             case GLOBALS.QAGE:
@@ -115,7 +127,6 @@ class Model {
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I'm " + gatsbi.getAge() + ".");
                 }
-                askGender();
                 break;
 
             case GLOBALS.QGENDER:
@@ -132,7 +143,6 @@ class Model {
                     c.say("I'm a machine programmed to be male.");
                 }
 
-                askOccupation();
                 break;
 
             case GLOBALS.QOCCUPATION:
@@ -143,7 +153,6 @@ class Model {
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I'm a machine... Isn't it obvious?");
                 }
-                askHometown();
                 break;
 
             case GLOBALS.QHOMETOWN:
@@ -153,18 +162,9 @@ class Model {
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I live in a far off, ditant land called Ford.");
                 }
-                askMajor();
                 break;
 
-            case GLOBALS.QMAJOR:
-                currentPerson.setMajor(parseMajor(text));
-                text = cleanse(text);
-                c.say("Heh.");
-                if (text.contains("you") || text.contains("your")) {
-                    c.say("I'm a " + gatsbi.getMajor() + " major!");
-                }
-                askLikes();
-                break;
+           
 
             case GLOBALS.QLIKES:
                 currentPerson.setLikes(parseLikes(text));
@@ -175,7 +175,6 @@ class Model {
                 }
                 printPerson();
                 c.say("Now I know all about you! Let's talk about your friends now.");
-                askFriend();
                 break;
 
             case GLOBALS.QFRIEND:
@@ -220,29 +219,7 @@ class Model {
         return returnMe;
     }
 
-    private String parseMajor(String text) {
-        String returnMe = text;
-
-        returnMe = cleanse(returnMe);
-        returnMe = returnMe.replaceAll("i ", "");
-        returnMe = returnMe.replaceAll("am ", "");
-        returnMe = returnMe.replaceAll("a ", "");
-        returnMe = returnMe.replaceAll("an ", "");
-        returnMe = returnMe.replaceAll("major ", "");
-        returnMe = returnMe.replaceAll("im ", "");
-        returnMe = returnMe.replaceAll("its ", "");
-        returnMe = returnMe.replaceAll("it ", "");
-        returnMe = returnMe.replaceAll("is ", "");
-        returnMe = returnMe.replaceAll("whats ", "");
-        returnMe = returnMe.replaceAll("what ", "");
-        returnMe = returnMe.replaceAll("yours", "");
-        returnMe = returnMe.replaceAll("your ", "");
-        returnMe = returnMe.replaceAll("how ", "");
-        returnMe = returnMe.replaceAll("about ", "");
-        returnMe = returnMe.replaceAll("you", "");
-
-        return returnMe;
-    }
+   
 
     private short parseOccupation(String text) {
 
@@ -550,53 +527,7 @@ class Model {
 
     }
 
-    private void askMidName() {
-
-        c.say("What's your middle name?");
-        lastAskedQuestion = GLOBALS.QMIDNAME;
-    }
-
-    private void askLastName() {
-
-        c.say("What's your last name?");
-        lastAskedQuestion = GLOBALS.QLASTNAME;
-    }
-
-    private void askGender() {
-
-        c.say("Are you male of female?");
-        lastAskedQuestion = GLOBALS.QGENDER;
-    }
-
-    private void askOccupation() {
-
-        c.say("What's your occupation?");
-        lastAskedQuestion = GLOBALS.QOCCUPATION;
-    }
-
-    private void askHometown() {
-
-        c.say("What's your hometown?");
-        lastAskedQuestion = GLOBALS.QHOMETOWN;
-    }
-
-    private void askMajor() {
-
-        c.say("What's your major?");
-        lastAskedQuestion = GLOBALS.QMAJOR;
-    }
-
-    private void askAge() {
-
-        c.say("What's your age?");
-        lastAskedQuestion = GLOBALS.QAGE;
-    }
-
-    private void askLikes() {
-
-        c.say("What do you like?");
-        lastAskedQuestion = GLOBALS.QLIKES;
-    }
+  
 
     private void printPerson() {
 //        for (int i = 0; i < 8; i++) {

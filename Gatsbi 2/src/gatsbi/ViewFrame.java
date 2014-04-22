@@ -150,13 +150,19 @@ public class ViewFrame extends javax.swing.JFrame {
 
     void say(String output) {
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException ex) {
-            System.out.println("nope.");
-        }
+        delay(1000); 
 
         outputTA.append("GATSBI: " + output + "\n");
         outputTA.setCaretPosition(outputTA.getDocument().getLength());
     }
+
+    private void delay(int i) {
+try {
+            Thread.sleep(i);
+        } catch (InterruptedException ex) {
+            System.out.println("nope.");
+        }    }
+    
+    
+    
 }
