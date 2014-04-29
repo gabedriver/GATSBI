@@ -44,36 +44,18 @@ public class ViewFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        inputTF = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        outputTA = new javax.swing.JTextArea();
         resetButton = new javax.swing.JButton();
         bypassBox = new javax.swing.JCheckBox();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        outputTA = new javax.swing.JTextArea();
+        jLabel2 = new javax.swing.JLabel();
+        jTextArea1 = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
+        inputTF = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
         getContentPane().setLayout(null);
-
-        inputTF.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
-        inputTF.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputTFActionPerformed(evt);
-            }
-        });
-        getContentPane().add(inputTF);
-        inputTF.setBounds(0, 420, 630, 30);
-
-        outputTA.setEditable(false);
-        outputTA.setColumns(20);
-        outputTA.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
-        outputTA.setLineWrap(true);
-        outputTA.setRows(5);
-        outputTA.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(outputTA);
-
-        getContentPane().add(jScrollPane1);
-        jScrollPane1.setBounds(20, 330, 590, 80);
 
         resetButton.setText("Reset");
         resetButton.addActionListener(new java.awt.event.ActionListener() {
@@ -82,7 +64,7 @@ public class ViewFrame extends javax.swing.JFrame {
             }
         });
         getContentPane().add(resetButton);
-        resetButton.setBounds(0, 0, 78, 29);
+        resetButton.setBounds(60, 370, 78, 29);
 
         bypassBox.setForeground(new java.awt.Color(255, 255, 255));
         bypassBox.setText("ByPass");
@@ -92,11 +74,48 @@ public class ViewFrame extends javax.swing.JFrame {
             }
         });
         getContentPane().add(bypassBox);
-        bypassBox.setBounds(80, 0, 106, 23);
+        bypassBox.setBounds(140, 370, 106, 23);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gatsbi/gatsby.jpg"))); // NOI18N
+        jScrollPane1.setBorder(null);
+
+        outputTA.setEditable(false);
+        outputTA.setBackground(new java.awt.Color(0, 0, 0));
+        outputTA.setColumns(20);
+        outputTA.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
+        outputTA.setForeground(new java.awt.Color(51, 204, 0));
+        outputTA.setLineWrap(true);
+        outputTA.setRows(5);
+        outputTA.setWrapStyleWord(true);
+        outputTA.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jScrollPane1.setViewportView(outputTA);
+
+        getContentPane().add(jScrollPane1);
+        jScrollPane1.setBounds(98, 38, 450, 270);
+
+        jLabel2.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gatsbi/monitor.png"))); // NOI18N
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(60, 0, 540, 430);
+
+        jTextArea1.setBackground(new java.awt.Color(0, 0, 0));
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setEnabled(false);
+        getContentPane().add(jTextArea1);
+        jTextArea1.setBounds(70, 10, 510, 320);
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gatsbi/background.jpg"))); // NOI18N
         getContentPane().add(jLabel1);
         jLabel1.setBounds(0, 0, 630, 420);
+
+        inputTF.setFont(new java.awt.Font("Monospaced", 0, 14)); // NOI18N
+        inputTF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputTFActionPerformed(evt);
+            }
+        });
+        getContentPane().add(inputTF);
+        inputTF.setBounds(0, 420, 630, 30);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -170,7 +189,9 @@ public class ViewFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox bypassBox;
     private javax.swing.JTextField inputTF;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea outputTA;
     private javax.swing.JButton resetButton;
     // End of variables declaration//GEN-END:variables
