@@ -487,6 +487,7 @@ class Model {
         String response = "";
         if (pos.contains("6") && pos.contains("1")) {
             if (!pos.get(pos.indexOf("1") + 1).contains("6") && !pos.get(pos.indexOf("1") + 1).contains("7")) {
+                returnMe = true;
                 String word1 = scentence[pos.indexOf("1")];
                 String word2 = scentence[pos.indexOf("1") + 1];
                 int rando = (int) (Math.random() * 2);
@@ -514,8 +515,10 @@ class Model {
             }
 
         }
+        return returnMe;
+    }
 
-    private void loadResponses() {
+     private void loadResponses(){
         MyReader rr = new MyReader("responses");
         String nextKey;
         String[] nextResponses;
