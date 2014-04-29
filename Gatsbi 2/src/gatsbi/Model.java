@@ -46,6 +46,9 @@ class Model {
     boolean b = false;
 
     public void askQuestion() {
+        if (GLOBALS.bypass) {
+            return;
+        }
         if (!QQ.isEmpty()) {
             Question nextQuestion = QQ.poll();
 
@@ -58,7 +61,7 @@ class Model {
         b = true;
 
     }
-    
+
     public String toString() {
         String returnMe = "I am a Model, please fill in my variables so I can be debugged.";
 
@@ -79,14 +82,15 @@ class Model {
         getResponse(text);
         //probe/continue
 
-       
     }
 
     private void getResponse(String text) {
+
         switch (lastAskedQuestion) {
             case GLOBALS.START:
                 c.say(responses.get("hello")[(int) (Math.random() * 10)]);
-askQuestion();
+                lastAskedQuestion = GLOBALS.NONE;
+                askQuestion();
                 break;
 
             case GLOBALS.QNAME: //we should ask about a friend during a conversation instead of right after he asks for your name... like "I'm bored of this conversation, let's talk about something else. Do you have any friends?"
@@ -96,13 +100,11 @@ askQuestion();
                 }
                 if (personIsNew) {
                     c.say("Oh, I haven't met you before! We should get to know each other!");
-                    
-                    lastAskedQuestion = GLOBALS.NONE;
                     break;
                 } else {
                     c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");
                 }
-                lastAskedQuestion = GLOBALS.QFRIEND;
+                lastAskedQuestion = GLOBALS.NONE;
                 break;
 
             case GLOBALS.QLASTNAME:
@@ -119,7 +121,7 @@ askQuestion();
 
             case GLOBALS.QAGE:
                 currentPerson.setAge((short) parseAge(text));
-                
+
                 text = cleanse(text);
 
                 if (text.contains("you") || text.contains("your")) {
@@ -400,7 +402,7 @@ askQuestion();
 
             if (next != null) {
 
-                System.out.println("~" + next.getName());
+//                System.out.println("~" + next.getName());
                 if (!next.isHidden() && next.getName().equals(name)) {
                     returnMe = true;
                 }
@@ -437,6 +439,11 @@ askQuestion();
         text = " " + text + " ";
 
         if (tryToUnderstand(text)) {
+            //to be deleted
+            if (!QQ.isEmpty()) {
+                askQuestion();
+                return;
+            }
             return;
         }
 
@@ -458,10 +465,10 @@ askQuestion();
             askQuestion();
             return;
         }
-        
-            String[] choices = responses.get("NOKEYFOUND");
-            c.say(choices[(int) (Math.random() * choices.length)]);
-        
+
+        String[] choices = responses.get("NOKEYFOUND");
+        c.say(choices[(int) (Math.random() * choices.length)]);
+
     }
 
     private boolean tryToUnderstand(String text) {
@@ -522,11 +529,11 @@ askQuestion();
 
     private void createNewPerson(String name) { //create a new person with name
         mw = new MyWriter(name);
-        System.out.println("MW Initialized.");
+//        System.out.println("MW Initialized.");
         currentPerson = new Person();
         currentPerson.setName(name);
         //            mw.close();
-        System.out.println("hello");
+//        System.out.println("hello");
 
     }
 
@@ -534,53 +541,52 @@ askQuestion();
 //        for (int i = 0; i < 8; i++) {
 //            mw.println(""+currentPerson.getNext());
 //        }
-        if (mw != null){
+        if (mw != null) {
 
-        if (currentPerson.getName().isEmpty()) {
-        
-            mw.println("-");
-        } else {
-            mw.println(currentPerson.getName());
+            if (currentPerson.getName().isEmpty()) {
+
+                mw.println("-");
+            } else {
+                mw.println(currentPerson.getName());
+            }
+
+            if (currentPerson.getLastName().isEmpty()) {
+                mw.println("-");
+            } else {
+                mw.println(currentPerson.getLastName());
+            }
+            if (currentPerson.getGender().isEmpty()) {
+                mw.println("-");
+            } else {
+                mw.println(currentPerson.getGender());
+            }
+
+            if (currentPerson.getOccupation() == GLOBALS.NULL) {
+                mw.println("-");
+            } else {
+                mw.println("" + currentPerson.getOccupation());
+            }
+            if (currentPerson.getHometown().isEmpty()) {
+                mw.println("-");
+            } else {
+                mw.println(currentPerson.getHometown());
+            }
+
+            if (currentPerson.getAge() == 0) {
+                mw.println("-");
+            } else {
+                mw.println("" + currentPerson.getAge());
+            }
+
+            if (currentPerson.getLikes().isEmpty()) {
+
+                mw.println("-");
+            } else {
+                mw.println(currentPerson.getLikes());
+            }
+
+            mw.close();
+
         }
-
-        if (currentPerson.getLastName().isEmpty()) {
-            mw.println("-");
-        } else {
-            mw.println(currentPerson.getLastName());
-        }
-        if (currentPerson.getGender().isEmpty()) {
-            mw.println("-");
-        } else {
-            mw.println(currentPerson.getGender());
-        }
-
-        if (currentPerson.getOccupation() == GLOBALS.NULL) {
-            mw.println("-");
-        } else {
-            mw.println("" + currentPerson.getOccupation());
-        }
-        if (currentPerson.getHometown().isEmpty()) {
-            mw.println("-");
-        } else {
-            mw.println(currentPerson.getHometown());
-        }
-
-
-        if (currentPerson.getAge() == 0) {
-            mw.println("-");
-        } else {
-            mw.println("" + currentPerson.getAge());
-        }
-
-        if (currentPerson.getLikes().isEmpty()) {
-
-            mw.println("-");
-        } else {
-            mw.println(currentPerson.getLikes());
-        }
-
-        mw.close();
-
-    }}
-
+    }
 }
