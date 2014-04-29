@@ -484,10 +484,36 @@ class Model {
                 pos.add("" + 0);
             }
         }
+        String response = "";
+        if (pos.contains("6") && pos.contains("1")) {
+            if (!pos.get(pos.indexOf("1") + 1).contains("6") && !pos.get(pos.indexOf("1") + 1).contains("7")) {
+                String word1 = scentence[pos.indexOf("1")];
+                String word2 = scentence[pos.indexOf("1") + 1];
+                int rando = (int) (Math.random() * 2);
+                switch (rando) {
+                    case 0:
+                        response = "Why do you " + word1 + " " + word2 + "?";
+                        break;
+                    case 1:
+                        response = "The way you " + word1 + " " + word2 + " is such a human thing to do.";  
+                        break;
+                }
+            } else {
+                String word1 = scentence[pos.indexOf("1")];
+                String word3 = scentence[pos.indexOf("1") + 1];
+                String word2 = scentence[pos.indexOf("1") + 2];
+                int rando = (int) (Math.random() * 2);
+                switch (rando) {
+                    case 0:
+                        response = "Why do you " + word1 + " " + word3 + " " + word2 + "?";
+                        break;
+                    case 1:
+                        response = "The way you " + word1 + " " + word3 + " " + word2 + " is such a human thing to do.";    
+                        break;
+                }
+            }
 
-        System.out.println(pos);
-        return returnMe;
-    }
+        }
 
     private void loadResponses() {
         MyReader rr = new MyReader("responses");
