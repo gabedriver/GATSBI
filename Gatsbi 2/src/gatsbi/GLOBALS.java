@@ -4,6 +4,8 @@ package gatsbi;
  * GLOBALS.java created by thigley on Apr 3, 2014 at 1:33:30 PM
  */
 public class GLOBALS {
+    static boolean bypass = true;
+    
     // occupation
     static final short MACHINE = 0;
     static final short STUDENT = 1;
@@ -67,18 +69,16 @@ public class GLOBALS {
     //last asked question
     static final short START = -1;
     static final short NONE = 0;
-    static final short QNAME = 1;
-    static final short QGENDER = 2;
-    static final short QOCCUPATION = 3;
-    static final short QHOMETOWN = 4;
-    static final short QMAJOR = 5;
-    static final short QAGE = 6;
-    static final short QLIKES = 7;   
-    static final short QFRIEND = 8;  
-    static final short QMIDNAME = 9;
-    static final short QLASTNAME = 10;
+    static final short QNAME = 10;
+    static final short QLASTNAME = 9;
+    static final short QGENDER = 8;
+    static final short QAGE = 7;
+    static final short QOCCUPATION = 6;
+    static final short QHOMETOWN = 5;
+    static final short QLIKES = 4;   
+    static final short QFRIEND = 3; 
     
-    
-    
+    static final short NULL = 100;
+        
     
 }

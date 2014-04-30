@@ -1,9 +1,7 @@
 firstName(str)
-middleName(str)
 lastName(str)
-genderM(bool)(1/0)
+male
 occupation(0-8)
 hometown(str)
-major(0-45)
 age(int)
 likes(str)

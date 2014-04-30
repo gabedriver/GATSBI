@@ -32,4 +32,8 @@ class Controller{
     void reset() {
         m = new Model(this);
     }
+
+    void clearScreen() {
+        vf.clear();
+    }
 }
