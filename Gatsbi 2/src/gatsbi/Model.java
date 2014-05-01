@@ -20,6 +20,7 @@ class Model {
     private Person friend;
     short lastAskedQuestion = GLOBALS.START;
     boolean personIsNew = false;
+    DataClient dc = new DataClient();
     MyReader mr = new MyReader();
     MyWriter mw;
 
@@ -627,6 +628,9 @@ class Model {
                     }
                     c.say("-- No file matching \"" + parts[1] + "\"");
                 }
+                break;
+            case "-s2s":
+                dc.saveToServer(currentPerson);
                 break;
             default:
                 c.say("-- Command Error --");
