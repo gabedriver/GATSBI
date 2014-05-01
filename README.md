@@ -11,7 +11,7 @@ The Chat bot runs with three levels of understanding, attempting the highest lev
 + Pick out the subject, predicate, key features, etc, and respond appropriately.  
 2. Keyword Match:  
 + Look for a keyword within the input.  
-+ Respond using the keyword.  
++ Respond using the keyword.   
 1. Predetermined Response.
 	
 In addition, GATSBI runs on a server which collects information from the local application.
