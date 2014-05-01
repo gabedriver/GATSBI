@@ -6,15 +6,15 @@ Gabe Andrew and Tyler's System of Basic Intelligence.
 GATSBI is a Chat bot created by Gabriel Driver-Wilson, Andrew Jansen, and Tyler Higley as a final project for Professor Levenick's CS-448: Machine Learning Class at Willamette University.
 
 The Chat bot runs with three levels of understanding, attempting the highest level first and decreasing if unsuccessful.  
-Pattern Match:  
+<b>Pattern Match:</b>  
 + Try to match a sentence pattern 
 + Pick out the subject, predicate, key features, etc, and respond appropriately.  
 
-Keyword Match:  
+<b>Keyword Match:</b>  
 + Look for a keyword within the input.  
 + Respond using the keyword.   
 
-Predetermined Response.
+<b>Predetermined Response.</b>
 	
 In addition, GATSBI runs on a server which collects information from the local application.
 
