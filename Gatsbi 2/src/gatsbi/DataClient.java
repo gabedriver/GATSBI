@@ -25,8 +25,8 @@ public class DataClient {
 
     public boolean saveToServer(Person currentPerson) {
         try (
-                Socket echoSocket = new Socket(hostName, portNumber);
-                PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);) {
+                Socket s = new Socket(hostName, portNumber);
+                PrintWriter out = new PrintWriter(s.getOutputStream(), true);) {
 
             out.println(currentPerson.getName().toLowerCase());
             if (currentPerson.getName().isEmpty()) {
@@ -85,13 +85,49 @@ public class DataClient {
 
     public File[] getAllFromServer() {
         File[] f = null;
-
+        try (
+                Socket s = new Socket(hostName, portNumber);
+                PrintWriter out = new PrintWriter(s.getOutputStream(), true);
+                BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));) {
+            out.println("-*");
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                //Load all!
+                //save them
+                //name then each line
+                //"*" comes after each complete person
+            }
+        } catch (UnknownHostException e) {
+            System.err.println("Don't know about host " + hostName);
+            System.exit(1);
+        } catch (IOException e) {
+            System.err.println("Couldn't get I/O for the connection to "
+                    + hostName);
+            System.exit(1);
+        }
         return f;
     }
 
     public File getFromServer(String name) {
         File f = null;
-
+        try (
+                Socket s = new Socket(hostName, portNumber);
+                PrintWriter out = new PrintWriter(s.getOutputStream(), true);
+                BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));) {
+            out.println("-" + name);
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                //Load that person!
+                //either to file or save it
+            }
+        } catch (UnknownHostException e) {
+            System.err.println("Don't know about host " + hostName);
+            System.exit(1);
+        } catch (IOException e) {
+            System.err.println("Couldn't get I/O for the connection to "
+                    + hostName);
+            System.exit(1);
+        }
         return f;
     }
 }
