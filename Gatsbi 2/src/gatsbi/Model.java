@@ -633,8 +633,8 @@ class Model {
                 dc.saveToServer(currentPerson);
                 c.say("-- saved to server --");
                 break;
-            case "-test":
-                dc.getAllFromServer();
+            case "-load":
+                loadAll(dc.getAllFromServer());
                 c.say("-- test run --");
                 break;
             default:
@@ -671,5 +671,64 @@ class Model {
             }
         }
         return returnMe;
+    }
+
+    private void loadAll(Person[] allFromServer) {
+        for (int i = 0; i < mr.files.length; i++) {
+            mr.files[i].delete();
+        }
+        mr = new MyReader();
+        
+        for (Person next : allFromServer) {
+            MyWriter nextWriter = new MyWriter(next.getName().toLowerCase());
+            
+            if (next.getName().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getName());
+            }
+            
+            if (next.getLastName().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getLastName());
+            }
+            
+             if (next.getGender().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getGender());
+            }
+            
+            if (next.getOccupation() == GLOBALS.NULL) {
+                nextWriter.println("-");
+            } else {
+                nextWriter.println("" + next.getOccupation());
+            }
+            
+            if (next.getHometown().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getHometown());
+            }
+            
+            if (next.getAge() == 0) {
+                nextWriter.println("-");
+            } else {
+                nextWriter.println("" + next.getAge());
+            }
+
+            if (next.getLikes().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getLikes());
+            }
+            nextWriter.close();
+        }
     }
 }

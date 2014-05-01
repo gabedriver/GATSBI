@@ -6,6 +6,7 @@ package gatsbi;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -83,8 +84,8 @@ public class DataClient {
         return true;
     }
 
-    public File[] getAllFromServer() {
-        File[] f = null;
+    public Person[] getAllFromServer() {
+        ArrayList<Person> f = new ArrayList<>();
         try (
                 Socket s = new Socket(hostName, portNumber);
                 PrintWriter out = new PrintWriter(s.getOutputStream(), true);
@@ -96,7 +97,30 @@ public class DataClient {
                 //save them
                 //name then each line
                 //"*" comes after each complete person
-                System.out.println(inputLine);
+                Person next = new Person();
+                next.setName(in.readLine());
+                next.setLastName(in.readLine());
+                next.setGender(in.readLine());
+
+                String oc = in.readLine();
+                if (oc.equals("-")||oc.equals("occupation(0-8)")) {
+                    next.setOccupation(GLOBALS.NULL);
+                } else {
+                    next.setOccupation(Short.parseShort(oc));
+                }
+
+                next.setHometown(in.readLine());
+
+                String age = in.readLine();
+                if (age.equals("-")||age.equals("age(int)")) {
+                    next.setAge((short) 0);
+                } else {
+                    next.setAge(Short.parseShort(age));
+                }
+
+                next.setLikes(in.readLine());
+                in.readLine();
+                f.add(next);
             }
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
@@ -106,22 +130,39 @@ public class DataClient {
                     + hostName);
             System.exit(1);
         }
-        return f;
+        Person[] returnMe = new Person[f.size()]; 
+        f.toArray(returnMe);
+        return  returnMe;
     }
 
-    public File getFromServer(String name) {
-        File f = null;
+    public Person getFromServer(String name) {
+        Person f = new Person();
         try (
                 Socket s = new Socket(hostName, portNumber);
                 PrintWriter out = new PrintWriter(s.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));) {
             out.println("-" + name);
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                //Load that person!
-                //either to file or save it
-                System.out.println(inputLine);
+            f.setName(in.readLine());
+            f.setLastName(in.readLine());
+            f.setGender(in.readLine());
+
+            String oc = in.readLine();
+            if (oc.equals("-")) {
+                f.setOccupation(GLOBALS.NULL);
+            } else {
+                f.setOccupation(Short.parseShort(in.readLine()));
             }
+
+            f.setHometown(in.readLine());
+
+            String age = in.readLine();
+            if (oc.equals("-")) {
+                f.setAge((short) 0);
+            } else {
+                f.setAge(Short.parseShort(age));
+            }
+
+            f.setLikes(in.readLine());
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
             System.exit(1);

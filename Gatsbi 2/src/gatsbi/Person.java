@@ -19,19 +19,11 @@ class Person extends AbstractPerson {
         setName(mr.giveMeTheNextLine());
         setLastName(mr.giveMeTheNextLine());
         setGender(mr.giveMeTheNextLine());
-        setOccupation((short) Integer.parseInt(mr.giveMeTheNextLine()));
+        setOccupation((short) Short.parseShort(mr.giveMeTheNextLine()));
         setHometown(mr.giveMeTheNextLine());
-        setAge((short) Integer.parseInt(mr.giveMeTheNextLine()));
+        setAge((short) Short.parseShort(mr.giveMeTheNextLine()));
         setLikes(mr.giveMeTheNextLine());
 
-    }
-
-    
-    
-    public String toString() {
-        String returnMe = "I am a Person, please fill in my variables so I can be debugged.";
-
-        return returnMe;
     }
 
 }
