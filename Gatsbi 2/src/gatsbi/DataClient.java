@@ -96,6 +96,7 @@ public class DataClient {
                 //save them
                 //name then each line
                 //"*" comes after each complete person
+                System.out.println(inputLine);
             }
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
@@ -119,6 +120,7 @@ public class DataClient {
             while ((inputLine = in.readLine()) != null) {
                 //Load that person!
                 //either to file or save it
+                System.out.println(inputLine);
             }
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);

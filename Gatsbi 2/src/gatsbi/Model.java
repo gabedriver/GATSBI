@@ -631,6 +631,11 @@ class Model {
                 break;
             case "-s2s":
                 dc.saveToServer(currentPerson);
+                c.say("-- saved to server --");
+                break;
+            case "-test":
+                dc.getAllFromServer();
+                c.say("-- test run --");
                 break;
             default:
                 c.say("-- Command Error --");
@@ -658,9 +663,9 @@ class Model {
             if (next != null) {
                 if (!next.isHidden() && next.getName().equals(name)) {
                     MyReader nmr = new MyReader(next);
-                    returnMe+= next.getName()+":";
-                    while(nmr.hasMoreData()){
-                        returnMe+="\n\t   "+nmr.giveMeTheNextLine();
+                    returnMe += next.getName() + ":";
+                    while (nmr.hasMoreData()) {
+                        returnMe += "\n\t   " + nmr.giveMeTheNextLine();
                     }
                 }
             }
