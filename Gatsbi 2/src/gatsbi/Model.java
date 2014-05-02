@@ -13,6 +13,7 @@ class Model {
     Controller c;
     private HashMap<String, String[]> responses = new HashMap<>();
     private HashMap<String, Integer> partOfSpeech = new HashMap<>();
+    private HashMap<String, String[]> posResponses = new HashMap<>();
     PriorityQueue<Question> QQ = new PriorityQueue<>();
     // People
     private Self gatsbi;
@@ -25,7 +26,7 @@ class Model {
 
     Model(Controller c) {
         this.c = c;
-        loadResponses();
+        load();
         currentPerson = new Person();
         gatsbi = new Self();
         loadQQ();
@@ -448,17 +449,31 @@ class Model {
                 return;
             }
         }
+        
+        
 
-        if (!QQ.isEmpty()) {
+        if (!QQ.isEmpty() && !GLOBALS.bypass) {
             askQuestion();
             return;
+        } else {
+            String[] choices = responses.get("NOKEYFOUND");
+            c.say(choices[(int) (Math.random() * choices.length)]);
         }
 
-        String[] choices = responses.get("NOKEYFOUND");
-        c.say(choices[(int) (Math.random() * choices.length)]);
+        
 
     }
 
+//    So the numbers are as follows:
+//        1 verbs
+//        2 adjectives
+//        3 adverbs
+//        4 prepositions
+//        5 2nd person
+//        6 1st person
+//        7 filler words
+//        8 conjuctions
+//        9 time words
     private boolean tryToUnderstand(String text) {
         boolean returnMe = false;
         String newText = text.substring(1, text.length() - 1);
@@ -466,44 +481,91 @@ class Model {
         ArrayList<String> pos = new ArrayList<String>();
         for (String string : scentence) {
             if (partOfSpeech.containsKey(string)) {
-                returnMe = true;
                 pos.add("" + partOfSpeech.get(string));
             } else {
                 pos.add("" + 0);
             }
         }
+        System.out.println(pos);
         String response = "";
-        if (pos.contains("6") && pos.contains("1")) {
-            if (!pos.get(pos.indexOf("1") + 1).contains("6") && !pos.get(pos.indexOf("1") + 1).contains("7")) {
-                returnMe = true;
-                String word1 = scentence[pos.indexOf("1")];
-                String word2 = scentence[pos.indexOf("1") + 1];
-                int rando = (int) (Math.random() * 2);
-                switch (rando) {
-                    case 0:
-                        response = "Why do you " + word1 + " " + word2 + "?";
-                        break;
-                    case 1:
-                        response = "The way you " + word1 + " " + word2 + " is such a human thing to do.";
-                        break;
-                }
-            } else {
-                String word1 = scentence[pos.indexOf("1")];
-                String word3 = scentence[pos.indexOf("1") + 1];
-                String word2 = scentence[pos.indexOf("1") + 2];
-                int rando = (int) (Math.random() * 2);
-                switch (rando) {
-                    case 0:
-                        response = "Why do you " + word1 + " " + word3 + " " + word2 + "?";
-                        break;
-                    case 1:
-                        response = "The way you " + word1 + " " + word3 + " " + word2 + " is such a human thing to do.";
-                        break;
+        ArrayList<String> responseList = new ArrayList<String>();
+        for (String string : posResponses.keySet()) {
+            
+            String[] input = string.split(" ");
+            int count = 0;
+            int runOnCount = 0;
+            int innerRunOnCount = 0;
+            for (int i = 0; i < input.length; i++) {
+                if (pos.contains(input[i])) {
+                    count++;
+                } else if (input[i].length() > 1) {
+                    runOnCount++;
+                    String[] runOn = input[i].split("-");
+                    for (int j = 0; j < runOn.length; j++) {
+                        count++;
+                        if (pos.contains(runOn[j])) {
+                            
+                            innerRunOnCount++;
+                        }
+                    }
                 }
             }
-
+            if (count == (input.length - runOnCount) + innerRunOnCount && count <= pos.size()) {
+                
+                int count2 = 0;
+                int count3 = 0;
+                for (String string1 : input) {
+                    if (string1.length() > 1) {
+                        count3++;
+                        int runCount = 0;
+                        String[] runOn = string1.split("-");
+                        for (int i = pos.indexOf(runOn[0]); i < pos.indexOf(runOn[0]) + runOn.length; i++) {
+                            if (pos.get(i).contains(runOn[runCount])) {
+                                runCount++;
+                            }
+                        }
+                        if (runCount == runOn.length) {
+                            count2++;
+                        }
+                    }
+                }
+                if(count2 == count3){
+                    responseList.clear();
+                    returnMe = true;
+                    for (String string1 : posResponses.get(string)) {
+                        response = string1;
+                        String[] theThing = response.split("[ ?!.]");
+                        for (String string2 : theThing) {
+                            if(string2.matches(".*\\d.*") && string2.length()==1){
+                                response = response.replace(string2, scentence[pos.indexOf(Integer.parseInt(string2))]);
+                            } else if(string2.matches(".*\\d.*") && string2.length()>1){
+                                String[] runOn = string2.split("[-?!.]");
+                                String replacement = scentence[pos.indexOf(runOn[0])];
+                                int count4 = 0;
+                                for (int i = pos.indexOf(runOn[0])+1; i < runOn.length+1; i++) {
+                                    replacement += " " + scentence[i];
+                                }
+                                response = response.replace(string2,replacement);
+                            }
+                        }
+                        responseList.add(response);
+                    }
+                }
+            }
+        }
+        if(returnMe){
+            int rando = (int) (Math.random()*responseList.size());
+            System.out.println("rando= " + rando);
+            System.out.println("List size = " + responseList.size());
+            c.say(responseList.get(rando));
         }
         return returnMe;
+    }
+
+    private void load() {
+        loadResponses();
+        loadPartsOfSpeech();
+        loadPosResponses();
     }
 
     private void loadResponses() {
@@ -524,7 +586,9 @@ class Model {
                 responses.put(allKeys[i], nextResponses);
             }
         }
+    }
 
+    private void loadPartsOfSpeech() {
         MyReader theOtherReader = new MyReader("PartsOfSpeech");
         ArrayList<String> keys = new ArrayList<String>();
         int value = 0;
@@ -540,8 +604,26 @@ class Model {
             }
             keys.clear();
         }
-        System.out.println(partOfSpeech);
+    }
 
+    private void loadPosResponses() {
+        MyReader rr = new MyReader("posResponses");
+        String nextKey;
+        String[] nextResponses;
+        while (rr.hasMoreData()) {
+            String input = rr.giveMeTheNextLine();
+            nextKey = input;
+            int ln = Integer.parseInt(rr.giveMeTheNextLine());
+            nextResponses = new String[ln];
+            for (int i = 0; i < ln; i++) {
+                nextResponses[i] = rr.giveMeTheNextLine();
+            }
+            rr.giveMeTheNextLine();
+            String[] allKeys = nextKey.split(";");
+            for (int i = 0; i < allKeys.length; i++) {
+                posResponses.put(allKeys[i], nextResponses);
+            }
+        }
     }
 
     private void createNewPerson(String name) { //create a new person with name
@@ -632,9 +714,6 @@ class Model {
                 c.say("-- Command Error --");
         }
 
-
-
-
         return true;
     }
 
@@ -654,9 +733,9 @@ class Model {
             if (next != null) {
                 if (!next.isHidden() && next.getName().equals(name)) {
                     MyReader nmr = new MyReader(next);
-                    returnMe+= next.getName()+":";
-                    while(nmr.hasMoreData()){
-                        returnMe+="\n\t   "+nmr.giveMeTheNextLine();
+                    returnMe += next.getName() + ":";
+                    while (nmr.hasMoreData()) {
+                        returnMe += "\n\t   " + nmr.giveMeTheNextLine();
                     }
                 }
             }
