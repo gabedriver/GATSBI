@@ -286,7 +286,7 @@ class Model {
 
         }
         returnMe = Integer.parseInt(cleanText);
-        c.say("Wow, you don't look a day older than " + (currentPerson.getAge() - 1) + "!");
+        c.say("Wow, you don't look a day older than " + Integer.toBinaryString(returnMe-1) + "!");
         return returnMe;
     }
 
@@ -719,7 +719,7 @@ class Model {
                 break;
             case "-load":
                 loadAll(dc.getAllFromServer());
-                c.say("-- test run --");
+                c.say("-- load complete --");
                 break;
             default:
                 c.say("-- Command Error --");
@@ -758,7 +758,6 @@ class Model {
         for (int i = 0; i < mr.files.length; i++) {
             mr.files[i].delete();
         }
-        mr = new MyReader();
         
         for (Person next : allFromServer) {
             MyWriter nextWriter = new MyWriter(next.getName().toLowerCase());
@@ -811,5 +810,6 @@ class Model {
             }
             nextWriter.close();
         }
+        mr = new MyReader();
     }
 }
