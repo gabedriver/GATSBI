@@ -21,16 +21,53 @@ class Person extends AbstractPerson {
         if (next.charAt(0) == '-') {
             setOccupation(GLOBALS.NULL);
         } else {
-            setOccupation((short) Short.parseShort(mr.giveMeTheNextLine()));
+            setOccupation((short) Short.parseShort(next));
         }
         setHometown(mr.giveMeTheNextLine());
         next = mr.giveMeTheNextLine();
         if (next.charAt(0) == '-') {
             setAge((short)0);
         } else {
-            setAge((short) Short.parseShort(mr.giveMeTheNextLine()));
+            setAge((short) Short.parseShort(next));
         }
         setLikes(mr.giveMeTheNextLine());
 
+    }
+
+    boolean qualityKnown(short lastAskedQuestion) {
+        boolean returnMe = false;
+        switch(lastAskedQuestion){
+            case GLOBALS.QLASTNAME:
+                if(getLastName().length() > 0){
+                    returnMe =   true;
+                }
+                break;
+            case GLOBALS.QAGE:
+                if(getAge() != 0){
+                    returnMe =   true;
+                }
+                break;
+            case GLOBALS.QGENDER:
+                if(getGender().length() > 0){
+                    returnMe =   true;
+                }
+                break;
+            case GLOBALS.QHOMETOWN:
+                if(getHometown().length() > 0){
+                    returnMe =   true;
+                }
+                break;
+            case GLOBALS.QLIKES:
+                if(getLikes().length() > 0){
+                    returnMe =   true;
+                }
+                break;
+            case GLOBALS.QOCCUPATION:
+                if(getOccupation() != GLOBALS.NULL){
+                    returnMe =  true;
+                }
+                break;
+        }
+        return returnMe;
     }
 }

@@ -51,9 +51,13 @@ class Model {
         }
         if (!QQ.isEmpty()) {
             Question nextQuestion = QQ.poll();
-
             lastAskedQuestion = nextQuestion.questionNumber;
-            c.say(nextQuestion.theQuestion);
+            if(currentPerson.qualityKnown(lastAskedQuestion)){
+                askQuestion();
+            } else{
+                c.say(nextQuestion.theQuestion);
+                return;
+            }
         }
         if (b) {
             printPerson();
@@ -95,6 +99,7 @@ class Model {
                     c.say("Oh, I haven't met you before! We should get to know each other!");
                 } else {
                     c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");
+                    
                 }
                 lastAskedQuestion = GLOBALS.NONE;
                 break;
@@ -431,11 +436,6 @@ class Model {
         text = " " + text + " ";
 
         if (tryToUnderstand(text)) {
-            //to be deleted
-            if (!QQ.isEmpty()) {
-                askQuestion();
-                return;
-            }
             return;
         }
 
@@ -509,6 +509,8 @@ class Model {
                         first = pos.indexOf(runOn[0]);
                         if(first+j == pos.indexOf(runOn[j])){
                             innerRunOnCount++;
+                        } else {
+                            innerRunOnCount--;
                         }
                     }
                 }
