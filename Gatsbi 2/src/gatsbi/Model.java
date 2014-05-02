@@ -491,15 +491,14 @@ class Model {
         String response = "";
         ArrayList<String> responseList = new ArrayList<String>();
         for (String string : posResponses.keySet()) {
-            
             String[] input = string.split(" ");
             int count = 0;
             int runOnCount = 0;
             int innerRunOnCount = 0;
             for (int i = 0; i < input.length; i++) {
-                if (pos.contains(input[i])) {
+                if (pos.contains(input[i]) && input[i].length() == 1) {
                     count++;
-                } else if (input[i].length() > 1) {
+                } else if (pos.contains(input[i].substring(0, 1)) && input[i].length() > 1) {
                     runOnCount++;
                     String[] runOn = input[i].split("-");
                     for (int j = 0; j < runOn.length; j++) {
