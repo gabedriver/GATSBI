@@ -425,7 +425,7 @@ class Model {
     private void tryToAnswer(String text) { //uses the first word of a question sentence to determine a generic answer.
         text = text.toLowerCase();
         text = text.replaceAll("'", "");
-        text = text.replaceAll("[^a-z ]", " ");
+        text = text.replaceAll("[^a-z ]", "");
         text = " " + text + " ";
 
         if (tryToUnderstand(text)) {
@@ -496,15 +496,16 @@ class Model {
             int runOnCount = 0;
             int innerRunOnCount = 0;
             for (int i = 0; i < input.length; i++) {
-                if (pos.contains(input[i]) && input[i].length() == 1) {
+                if (pos.contains(input[i])) {
                     count++;
-                } else if (pos.contains(input[i].substring(0, 1)) && input[i].length() > 1) {
+                } else if (input[i].length() > 1 && pos.contains(input[i].substring(0, input[i].indexOf("-")))) {
                     runOnCount++;
                     String[] runOn = input[i].split("-");
+                    int first = 0;
                     for (int j = 0; j < runOn.length; j++) {
                         count++;
-                        if (pos.contains(runOn[j])) {
-                            
+                        first = pos.indexOf(runOn[0]);
+                        if(first+j == pos.indexOf(runOn[j])){
                             innerRunOnCount++;
                         }
                     }
@@ -519,7 +520,8 @@ class Model {
                         count3++;
                         int runCount = 0;
                         String[] runOn = string1.split("-");
-                        for (int i = pos.indexOf(runOn[0]); i < pos.indexOf(runOn[0]) + runOn.length; i++) {
+                        int end = pos.indexOf(runOn[0]) + runOn.length > pos.size()? pos.size() : pos.indexOf(runOn[0]) + runOn.length;
+                        for (int i = pos.indexOf(runOn[0]); i < end; i++) {
                             if (pos.get(i).contains(runOn[runCount])) {
                                 runCount++;
                             }
@@ -534,10 +536,11 @@ class Model {
                     returnMe = true;
                     for (String string1 : posResponses.get(string)) {
                         response = string1;
-                        String[] theThing = response.split("[ ?!.]");
+                        String[] theThing = response.split(" ");
+                        theThing[theThing.length-1] = (String) theThing[theThing.length-1].subSequence(0, theThing[theThing.length-1].length()-1);
                         for (String string2 : theThing) {
                             if(string2.matches(".*\\d.*") && string2.length()==1){
-                                response = response.replace(string2, scentence[pos.indexOf(Integer.parseInt(string2))]);
+                                response = response.replace(string2, scentence[pos.indexOf(string2)]);
                             } else if(string2.matches(".*\\d.*") && string2.length()>1){
                                 String[] runOn = string2.split("[-?!.]");
                                 String replacement = scentence[pos.indexOf(runOn[0])];
