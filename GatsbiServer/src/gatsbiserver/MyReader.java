@@ -1,4 +1,4 @@
-package gatsbi;
+package gatsbiserver;
 
 /**
  * MyReader.java created by ajansen on Apr 10, 2014 at 2:00:16 PM

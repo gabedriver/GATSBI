@@ -1,4 +1,4 @@
-package gatsbi;
+package gatsbiserver;
 
 /**
  * MyWriter.java created by ajansen on Apr 10, 2014 at 2:06:25 PM
@@ -8,8 +8,6 @@ import java.io.*;
 import java.awt.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MyWriter  {
     protected PrintWriter pw;
@@ -24,6 +22,8 @@ public class MyWriter  {
     public MyWriter(String path) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         URL url = classLoader.getResource("users");
+        
+        System.out.println(classLoader.toString());
         File file = null;
         String absPath = "";
         try {

@@ -21,6 +21,7 @@ class Model {
     private Person friend;
     short lastAskedQuestion = GLOBALS.START;
     boolean personIsNew = false;
+    DataClient dc = new DataClient();
     MyReader mr = new MyReader();
     MyWriter mw;
 
@@ -710,6 +711,14 @@ class Model {
                     c.say("-- No file matching \"" + parts[1] + "\"");
                 }
                 break;
+            case "-s2s":
+                dc.saveToServer(currentPerson);
+                c.say("-- saved to server --");
+                break;
+            case "-load":
+                loadAll(dc.getAllFromServer());
+                c.say("-- test run --");
+                break;
             default:
                 c.say("-- Command Error --");
         }
@@ -741,5 +750,64 @@ class Model {
             }
         }
         return returnMe;
+    }
+
+    private void loadAll(Person[] allFromServer) {
+        for (int i = 0; i < mr.files.length; i++) {
+            mr.files[i].delete();
+        }
+        mr = new MyReader();
+        
+        for (Person next : allFromServer) {
+            MyWriter nextWriter = new MyWriter(next.getName().toLowerCase());
+            
+            if (next.getName().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getName());
+            }
+            
+            if (next.getLastName().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getLastName());
+            }
+            
+             if (next.getGender().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getGender());
+            }
+            
+            if (next.getOccupation() == GLOBALS.NULL) {
+                nextWriter.println("-");
+            } else {
+                nextWriter.println("" + next.getOccupation());
+            }
+            
+            if (next.getHometown().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getHometown());
+            }
+            
+            if (next.getAge() == 0) {
+                nextWriter.println("-");
+            } else {
+                nextWriter.println("" + next.getAge());
+            }
+
+            if (next.getLikes().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getLikes());
+            }
+            nextWriter.close();
+        }
     }
 }

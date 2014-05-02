@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+<<<<<<< HEAD
+=======
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/Users/Tyler/GATSBI/Gatsbi%202/src/gatsbi/Model.java</file>
+        <file>file:/Users/Tyler/GATSBI/Gatsbi%202/src/gatsbi/DataClient.java</file>
+        <file>file:/Users/Tyler/GATSBI/Gatsbi%202/src/gatsbi/Person.java</file>
+    </open-files>
+>>>>>>> db1bb0660fc7644d9b712558057e2c489efe16c9
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/Users/gabrieldriver-wilson/Desktop/GATSBI/Gatsbi%202/src/other/posResponses</file>
