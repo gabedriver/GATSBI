@@ -129,6 +129,8 @@ class Model {
                 } else if (text.contains("man") || text.contains("male") || text.contains("guy") || text.contains("boy")) {
                     currentPerson.setGender("male");
                     c.say("That's nice. I definitely relate better to males.");
+                } else {
+                    c.say("You don't need to conform to the binary. I don't... oh wait");
                 }
                 text = cleanse(text);
 
@@ -693,7 +695,7 @@ class Model {
     }
 
     private boolean command(String text) {
-        if (text.charAt(0) != '-') {
+        if (text.length()>0 && text.charAt(0) != '-') {
             return false;
         }
         String[] parts = text.split(" ");
