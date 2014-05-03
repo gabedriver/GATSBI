@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class DataClient {
 
-    String hostName = "wu-124657.willamette.edu";
+    String hostName = "wu-1041.willamette.edu";
     int portNumber = 9090;
 
     DataClient() {

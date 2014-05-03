@@ -112,13 +112,13 @@ abstract class AbstractPerson {
 
     public String toString() {
         String returnMe = "I am a Person: ";
-        returnMe += "\tfirstName=" + getName();
-        returnMe += "\tlastName=" + getLastName();
-        returnMe += "\tgenderM=" + getGender();
-        returnMe += "\toccupation=" + getOccupation();
-        returnMe += "\thometown=" + getHometown();
-        returnMe += "\tage=" + getAge();
-        returnMe += "\tinterestingFact=" + getLikes();
+        returnMe += "\nfirstName=" + getName();
+        returnMe += "\nlastName=" + getLastName();
+        returnMe += "\ngenderM=" + getGender();
+        returnMe += "\noccupation=" + getOccupation();
+        returnMe += "\nhometown=" + getHometown();
+        returnMe += "\nage=" + getAge();
+        returnMe += "\ninterestingFact=" + getLikes();
         return returnMe;
     } // toString()
 }
