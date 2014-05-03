@@ -56,6 +56,7 @@ class Model {
             System.out.println("lastAskedQuestion = " + lastAskedQuestion);
 
             if (currentPerson.qualityKnown(lastAskedQuestion)) {
+                System.out.println("hello???");
                 askQuestion();
             } else {
                 c.say(nextQuestion.theQuestion);
@@ -87,7 +88,7 @@ class Model {
     }
 
     private void getResponse(String text) {
-        
+
         switch (lastAskedQuestion) {
             case GLOBALS.START:
                 c.say(responses.get("hello")[(int) (Math.random() * 10)]);
@@ -131,7 +132,9 @@ class Model {
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I'm " + gatsbi.getAge() + ".");
                 }
-                lastAskedQuestion = GLOBALS.NONE;
+                if (currentPerson.getAge() != 0) {
+                    lastAskedQuestion = GLOBALS.NONE;
+                }
                 break;
 
             case GLOBALS.QGENDER:
@@ -223,8 +226,7 @@ class Model {
         returnMe = returnMe.replaceAll("you ", "");
 
         return returnMe;
-    }                    
-
+    }
 
     private short parseOccupation(String text) {
 
@@ -657,46 +659,56 @@ class Model {
 //            mw.println(""+currentPerson.getNext());
 //        }
         mw = new MyWriter(currentPerson.getName());
-        
+
         if (mw != null) {
             System.out.println(".printing.printing.printing.printing.printing.");
 
             if (currentPerson.getName().isEmpty()) {
                 mw.println("-");
+                currentPerson.setName("-");
             } else {
                 mw.println(currentPerson.getName());
             }
 
             if (currentPerson.getLastName().isEmpty()) {
                 mw.println("-");
+                currentPerson.setLastName("-");
             } else {
                 mw.println(currentPerson.getLastName());
             }
             if (currentPerson.getGender().isEmpty()) {
                 mw.println("-");
+                currentPerson.setGender("-");
             } else {
                 mw.println(currentPerson.getGender());
             }
 
             if (currentPerson.getOccupation() == GLOBALS.NULL) {
                 mw.println("-");
+                currentPerson.setOccupation(GLOBALS.NULL);
             } else {
                 mw.println("" + currentPerson.getOccupation());
             }
             if (currentPerson.getHometown().isEmpty()) {
                 mw.println("-");
+                currentPerson.setHometown("-");
             } else {
                 mw.println(currentPerson.getHometown());
             }
 
             if (currentPerson.getAge() == 0) {
                 mw.println("-");
+                currentPerson.setAge((short) 0);
+
             } else {
                 mw.println("" + currentPerson.getAge());
+
             }
 
             if (currentPerson.getLikes().isEmpty()) {
                 mw.println("-");
+                currentPerson.setLikes("-");
+
             } else {
                 mw.println(currentPerson.getLikes());
             }

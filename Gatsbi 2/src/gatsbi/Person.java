@@ -54,7 +54,7 @@ class Person extends AbstractPerson {
                 }
                 break;
             case GLOBALS.QHOMETOWN:
-                if(getHometown().length() == 0||!getHometown().contains("-")){
+                if(!getHometown().equals("-")){
                     returnMe =   true;
                 }
                 break;
