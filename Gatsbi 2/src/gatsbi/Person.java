@@ -38,7 +38,7 @@ class Person extends AbstractPerson {
         boolean returnMe = false;
         switch(lastAskedQuestion){
             case GLOBALS.QLASTNAME:
-                if(getLastName().length() > 0){
+                if(!getLastName().startsWith("-")){
                     returnMe =   true;
                 }
                 break;
@@ -48,17 +48,17 @@ class Person extends AbstractPerson {
                 }
                 break;
             case GLOBALS.QGENDER:
-                if(getGender().length() > 0){
+                if(!getGender().startsWith("-")){
                     returnMe =   true;
                 }
                 break;
             case GLOBALS.QHOMETOWN:
-                if(getHometown().length() > 0){
+                if(!getHometown().startsWith("-")){
                     returnMe =   true;
                 }
                 break;
             case GLOBALS.QLIKES:
-                if(getLikes().length() > 0){
+                if(!getLikes().startsWith("-")){
                     returnMe =   true;
                 }
                 break;

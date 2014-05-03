@@ -52,17 +52,18 @@ class Model {
         if (!QQ.isEmpty()) {
             Question nextQuestion = QQ.poll();
             lastAskedQuestion = nextQuestion.questionNumber;
-            if(currentPerson.qualityKnown(lastAskedQuestion)){
+            if (currentPerson.qualityKnown(lastAskedQuestion)) {
                 askQuestion();
-            } else{
+            } else {
                 c.say(nextQuestion.theQuestion);
+                if (b) {
+                    System.out.println("hiewefon");
+                    printPerson();
+                }
+                b = true;
                 return;
             }
         }
-        if (b) {
-            printPerson();
-        }
-        b = true;
 
     }
 
@@ -99,7 +100,7 @@ class Model {
                     c.say("Oh, I haven't met you before! We should get to know each other!");
                 } else {
                     c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");
-                    
+
                 }
                 lastAskedQuestion = GLOBALS.NONE;
                 break;
@@ -293,7 +294,7 @@ class Model {
 
         }
         returnMe = Integer.parseInt(cleanText);
-        c.say("Wow, you don't look a day older than " + Integer.toBinaryString(returnMe-1) + "!");
+        c.say("Wow, you don't look a day older than " + Integer.toBinaryString(returnMe - 1) + "!");
         return returnMe;
     }
 
@@ -413,6 +414,8 @@ class Model {
     private void foundSelf(File file) { //now ask questions about the current user. eg "How are your CS Classes going?"
         MyReader self = new MyReader(file);
         currentPerson = new Person(self);
+        mw = new MyWriter(cleanse(currentPerson.getName()));
+        printPerson();
     }
 
     private void foundFriend(File next) { //spit out some relevent info about the person, or ask more questions about the person to fill in variables.
@@ -440,7 +443,6 @@ class Model {
         }
 
         if ((text.contains("your") || text.contains("you")) && text.contains("name")) {
-
             c.say("My name is " + gatsbi.getName());
             return;
         }
@@ -452,8 +454,6 @@ class Model {
                 return;
             }
         }
-        
-        
 
         if (!QQ.isEmpty() && !GLOBALS.bypass) {
             askQuestion();
@@ -462,8 +462,6 @@ class Model {
             String[] choices = responses.get("NOKEYFOUND");
             c.say(choices[(int) (Math.random() * choices.length)]);
         }
-
-        
 
     }
 
@@ -507,7 +505,7 @@ class Model {
                     for (int j = 0; j < runOn.length; j++) {
                         count++;
                         first = pos.indexOf(runOn[0]);
-                        if(first+j == pos.indexOf(runOn[j])){
+                        if (first + j == pos.indexOf(runOn[j])) {
                             innerRunOnCount++;
                         } else {
                             innerRunOnCount--;
@@ -516,7 +514,7 @@ class Model {
                 }
             }
             if (count == (input.length - runOnCount) + innerRunOnCount && count <= pos.size()) {
-                
+
                 int count2 = 0;
                 int count3 = 0;
                 for (String string1 : input) {
@@ -524,7 +522,7 @@ class Model {
                         count3++;
                         int runCount = 0;
                         String[] runOn = string1.split("-");
-                        int end = pos.indexOf(runOn[0]) + runOn.length > pos.size()? pos.size() : pos.indexOf(runOn[0]) + runOn.length;
+                        int end = pos.indexOf(runOn[0]) + runOn.length > pos.size() ? pos.size() : pos.indexOf(runOn[0]) + runOn.length;
                         for (int i = pos.indexOf(runOn[0]); i < end; i++) {
                             if (pos.get(i).contains(runOn[runCount])) {
                                 runCount++;
@@ -535,24 +533,24 @@ class Model {
                         }
                     }
                 }
-                if(count2 == count3){
+                if (count2 == count3) {
                     responseList.clear();
                     returnMe = true;
                     for (String string1 : posResponses.get(string)) {
                         response = string1;
                         String[] theThing = response.split(" ");
-                        theThing[theThing.length-1] = (String) theThing[theThing.length-1].subSequence(0, theThing[theThing.length-1].length()-1);
+                        theThing[theThing.length - 1] = (String) theThing[theThing.length - 1].subSequence(0, theThing[theThing.length - 1].length() - 1);
                         for (String string2 : theThing) {
-                            if(string2.matches(".*\\d.*") && string2.length()==1){
+                            if (string2.matches(".*\\d.*") && string2.length() == 1) {
                                 response = response.replace(string2, scentence[pos.indexOf(string2)]);
-                            } else if(string2.matches(".*\\d.*") && string2.length()>1){
+                            } else if (string2.matches(".*\\d.*") && string2.length() > 1) {
                                 String[] runOn = string2.split("[-?!.]");
                                 String replacement = scentence[pos.indexOf(runOn[0])];
                                 int count4 = 0;
-                                for (int i = pos.indexOf(runOn[0])+1; i < runOn.length+1; i++) {
+                                for (int i = pos.indexOf(runOn[0]) + 1; i < runOn.length + 1; i++) {
                                     replacement += " " + scentence[i];
                                 }
-                                response = response.replace(string2,replacement);
+                                response = response.replace(string2, replacement);
                             }
                         }
                         responseList.add(response);
@@ -560,8 +558,8 @@ class Model {
                 }
             }
         }
-        if(returnMe){
-            int rando = (int) (Math.random()*responseList.size());
+        if (returnMe) {
+            int rando = (int) (Math.random() * responseList.size());
             System.out.println("rando= " + rando);
             System.out.println("List size = " + responseList.size());
             c.say(responseList.get(rando));
@@ -650,7 +648,6 @@ class Model {
         if (mw != null) {
 
             if (currentPerson.getName().isEmpty()) {
-
                 mw.println("-");
             } else {
                 mw.println(currentPerson.getName());
@@ -697,7 +694,7 @@ class Model {
     }
 
     private boolean command(String text) {
-        if (text.length()>0 && text.charAt(0) != '-') {
+        if (text.length() > 0 && text.charAt(0) != '-') {
             return false;
         }
         String[] parts = text.split(" ");
@@ -762,44 +759,44 @@ class Model {
         for (int i = 0; i < mr.files.length; i++) {
             mr.files[i].delete();
         }
-        
+
         for (Person next : allFromServer) {
             MyWriter nextWriter = new MyWriter(next.getName().toLowerCase());
-            
+
             if (next.getName().isEmpty()) {
 
                 nextWriter.println("-");
             } else {
                 nextWriter.println(next.getName());
             }
-            
+
             if (next.getLastName().isEmpty()) {
 
                 nextWriter.println("-");
             } else {
                 nextWriter.println(next.getLastName());
             }
-            
-             if (next.getGender().isEmpty()) {
+
+            if (next.getGender().isEmpty()) {
 
                 nextWriter.println("-");
             } else {
                 nextWriter.println(next.getGender());
             }
-            
+
             if (next.getOccupation() == GLOBALS.NULL) {
                 nextWriter.println("-");
             } else {
                 nextWriter.println("" + next.getOccupation());
             }
-            
+
             if (next.getHometown().isEmpty()) {
 
                 nextWriter.println("-");
             } else {
                 nextWriter.println(next.getHometown());
             }
-            
+
             if (next.getAge() == 0) {
                 nextWriter.println("-");
             } else {
