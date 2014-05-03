@@ -111,7 +111,7 @@ abstract class AbstractPerson {
     }
 
     public String toString() {
-        String returnMe = "I am a Foo: ";
+        String returnMe = "I am a Person: ";
         returnMe += "\tfirstName=" + getName();
         returnMe += "\tlastName=" + getLastName();
         returnMe += "\tgenderM=" + getGender();

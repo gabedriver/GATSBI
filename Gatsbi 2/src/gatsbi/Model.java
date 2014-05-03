@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Model.java created by thigley on Apr 3, 2014 at 1:54:03 PM
@@ -15,6 +13,7 @@ class Model {
     Controller c;
     private HashMap<String, String[]> responses = new HashMap<>();
     private HashMap<String, Integer> partOfSpeech = new HashMap<>();
+    private HashMap<String, String[]> posResponses = new HashMap<>();
     PriorityQueue<Question> QQ = new PriorityQueue<>();
     // People
     private Self gatsbi;
@@ -22,12 +21,13 @@ class Model {
     private Person friend;
     short lastAskedQuestion = GLOBALS.START;
     boolean personIsNew = false;
+    DataClient dc = new DataClient();
     MyReader mr = new MyReader();
     MyWriter mw;
 
     Model(Controller c) {
         this.c = c;
-        loadResponses();
+        load();
         currentPerson = new Person();
         gatsbi = new Self();
         loadQQ();
@@ -46,26 +46,24 @@ class Model {
     boolean b = false;
 
     public void askQuestion() {
-       if(GLOBALS.bypass){
-           return;
-       }
+        if (GLOBALS.bypass) {
+            return;
+        }
         if (!QQ.isEmpty()) {
             Question nextQuestion = QQ.poll();
-
             lastAskedQuestion = nextQuestion.questionNumber;
-            c.say(nextQuestion.theQuestion);
+            if(currentPerson.qualityKnown(lastAskedQuestion)){
+                askQuestion();
+            } else{
+                c.say(nextQuestion.theQuestion);
+                return;
+            }
         }
         if (b) {
             printPerson();
         }
         b = true;
 
-    }
-
-    public String toString() {
-        String returnMe = "I am a Model, please fill in my variables so I can be debugged.";
-
-        return returnMe;
     }
 
     boolean hasName() {
@@ -77,11 +75,11 @@ class Model {
     }
 
     void parse(String text) {
-        //save      
+        if (command(text)) {
+            return;
+        }
         currentPerson.inputs.add(text);
         getResponse(text);
-        //probe/continue
-
     }
 
     private void getResponse(String text) {
@@ -99,13 +97,11 @@ class Model {
                 }
                 if (personIsNew) {
                     c.say("Oh, I haven't met you before! We should get to know each other!");
-
-                    lastAskedQuestion = GLOBALS.NONE;
-                    break;
                 } else {
                     c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");
+                    
                 }
-                lastAskedQuestion = GLOBALS.QFRIEND;
+                lastAskedQuestion = GLOBALS.NONE;
                 break;
 
             case GLOBALS.QLASTNAME:
@@ -138,6 +134,8 @@ class Model {
                 } else if (text.contains("man") || text.contains("male") || text.contains("guy") || text.contains("boy")) {
                     currentPerson.setGender("male");
                     c.say("That's nice. I definitely relate better to males.");
+                } else {
+                    c.say("You don't need to conform to the binary. I don't... oh wait");
                 }
                 text = cleanse(text);
 
@@ -181,9 +179,7 @@ class Model {
                 if (personExists(text)) {
                     foundFriend(getPerson(text));
                 } else {
-                    //genericResponse(); //okay... now add the new person to the list, create a file, and ask questions about that person.
                     lastAskedQuestion = GLOBALS.NONE;
-
                 }
                 break;
 
@@ -297,7 +293,7 @@ class Model {
 
         }
         returnMe = Integer.parseInt(cleanText);
-        c.say("Wow, you don't look a day older than " + (currentPerson.getAge() - 1) + "!");
+        c.say("Wow, you don't look a day older than " + Integer.toBinaryString(returnMe-1) + "!");
         return returnMe;
     }
 
@@ -403,7 +399,7 @@ class Model {
 
             if (next != null) {
 
-                System.out.println("~" + next.getName());
+//                System.out.println("~" + next.getName());
                 if (!next.isHidden() && next.getName().equals(name)) {
                     returnMe = true;
                 }
@@ -436,7 +432,7 @@ class Model {
     private void tryToAnswer(String text) { //uses the first word of a question sentence to determine a generic answer.
         text = text.toLowerCase();
         text = text.replaceAll("'", "");
-        text = text.replaceAll("[^a-z ]", " ");
+        text = text.replaceAll("[^a-z ]", "");
         text = " " + text + " ";
 
         if (tryToUnderstand(text)) {
@@ -456,17 +452,31 @@ class Model {
                 return;
             }
         }
+        
+        
 
-        if (!QQ.isEmpty()) {
+        if (!QQ.isEmpty() && !GLOBALS.bypass) {
             askQuestion();
             return;
+        } else {
+            String[] choices = responses.get("NOKEYFOUND");
+            c.say(choices[(int) (Math.random() * choices.length)]);
         }
 
-        String[] choices = responses.get("NOKEYFOUND");
-        c.say(choices[(int) (Math.random() * choices.length)]);
+        
 
     }
 
+//    So the numbers are as follows:
+//        1 verbs
+//        2 adjectives
+//        3 adverbs
+//        4 prepositions
+//        5 2nd person
+//        6 1st person
+//        7 filler words
+//        8 conjuctions
+//        9 time words
     private boolean tryToUnderstand(String text) {
         boolean returnMe = false;
         String newText = text.substring(1, text.length() - 1);
@@ -474,15 +484,95 @@ class Model {
         ArrayList<String> pos = new ArrayList<String>();
         for (String string : scentence) {
             if (partOfSpeech.containsKey(string)) {
-                returnMe = true;
                 pos.add("" + partOfSpeech.get(string));
             } else {
                 pos.add("" + 0);
             }
         }
-
         System.out.println(pos);
+        String response = "";
+        ArrayList<String> responseList = new ArrayList<String>();
+        for (String string : posResponses.keySet()) {
+            String[] input = string.split(" ");
+            int count = 0;
+            int runOnCount = 0;
+            int innerRunOnCount = 0;
+            for (int i = 0; i < input.length; i++) {
+                if (pos.contains(input[i])) {
+                    count++;
+                } else if (input[i].length() > 1 && pos.contains(input[i].substring(0, input[i].indexOf("-")))) {
+                    runOnCount++;
+                    String[] runOn = input[i].split("-");
+                    int first = 0;
+                    for (int j = 0; j < runOn.length; j++) {
+                        count++;
+                        first = pos.indexOf(runOn[0]);
+                        if(first+j == pos.indexOf(runOn[j])){
+                            innerRunOnCount++;
+                        } else {
+                            innerRunOnCount--;
+                        }
+                    }
+                }
+            }
+            if (count == (input.length - runOnCount) + innerRunOnCount && count <= pos.size()) {
+                
+                int count2 = 0;
+                int count3 = 0;
+                for (String string1 : input) {
+                    if (string1.length() > 1) {
+                        count3++;
+                        int runCount = 0;
+                        String[] runOn = string1.split("-");
+                        int end = pos.indexOf(runOn[0]) + runOn.length > pos.size()? pos.size() : pos.indexOf(runOn[0]) + runOn.length;
+                        for (int i = pos.indexOf(runOn[0]); i < end; i++) {
+                            if (pos.get(i).contains(runOn[runCount])) {
+                                runCount++;
+                            }
+                        }
+                        if (runCount == runOn.length) {
+                            count2++;
+                        }
+                    }
+                }
+                if(count2 == count3){
+                    responseList.clear();
+                    returnMe = true;
+                    for (String string1 : posResponses.get(string)) {
+                        response = string1;
+                        String[] theThing = response.split(" ");
+                        theThing[theThing.length-1] = (String) theThing[theThing.length-1].subSequence(0, theThing[theThing.length-1].length()-1);
+                        for (String string2 : theThing) {
+                            if(string2.matches(".*\\d.*") && string2.length()==1){
+                                response = response.replace(string2, scentence[pos.indexOf(string2)]);
+                            } else if(string2.matches(".*\\d.*") && string2.length()>1){
+                                String[] runOn = string2.split("[-?!.]");
+                                String replacement = scentence[pos.indexOf(runOn[0])];
+                                int count4 = 0;
+                                for (int i = pos.indexOf(runOn[0])+1; i < runOn.length+1; i++) {
+                                    replacement += " " + scentence[i];
+                                }
+                                response = response.replace(string2,replacement);
+                            }
+                        }
+                        responseList.add(response);
+                    }
+                }
+            }
+        }
+        if(returnMe){
+            int rando = (int) (Math.random()*responseList.size());
+            System.out.println("rando= " + rando);
+            System.out.println("List size = " + responseList.size());
+            c.say(responseList.get(rando));
+        }
         return returnMe;
+    }
+
+    private void load() {
+        loadResponses();
+        loadPartsOfSpeech();
+        loadPosResponses();
     }
 
     private void loadResponses() {
@@ -503,7 +593,9 @@ class Model {
                 responses.put(allKeys[i], nextResponses);
             }
         }
+    }
 
+    private void loadPartsOfSpeech() {
         MyReader theOtherReader = new MyReader("PartsOfSpeech");
         ArrayList<String> keys = new ArrayList<String>();
         int value = 0;
@@ -519,17 +611,35 @@ class Model {
             }
             keys.clear();
         }
-        System.out.println(partOfSpeech);
+    }
 
+    private void loadPosResponses() {
+        MyReader rr = new MyReader("posResponses");
+        String nextKey;
+        String[] nextResponses;
+        while (rr.hasMoreData()) {
+            String input = rr.giveMeTheNextLine();
+            nextKey = input;
+            int ln = Integer.parseInt(rr.giveMeTheNextLine());
+            nextResponses = new String[ln];
+            for (int i = 0; i < ln; i++) {
+                nextResponses[i] = rr.giveMeTheNextLine();
+            }
+            rr.giveMeTheNextLine();
+            String[] allKeys = nextKey.split(";");
+            for (int i = 0; i < allKeys.length; i++) {
+                posResponses.put(allKeys[i], nextResponses);
+            }
+        }
     }
 
     private void createNewPerson(String name) { //create a new person with name
         mw = new MyWriter(name);
-        System.out.println("MW Initialized.");
+//        System.out.println("MW Initialized.");
         currentPerson = new Person();
         currentPerson.setName(name);
         //            mw.close();
-        System.out.println("hello");
+//        System.out.println("hello");
 
     }
 
@@ -586,4 +696,124 @@ class Model {
         }
     }
 
+    private boolean command(String text) {
+        if (text.length()>0 && text.charAt(0) != '-') {
+            return false;
+        }
+        String[] parts = text.split(" ");
+        switch (parts[0]) {
+            case "-clc":
+                c.clearScreen();
+                break;
+            case "-ls":
+                c.say(getAllUsers());
+                break;
+            case "-disp":
+                if (parts.length > 1) {
+                    if (personExists(parts[1])) {
+                        c.say(getPersonInfo(parts[1]));
+                        break;
+                    }
+                    c.say("-- No file matching \"" + parts[1] + "\"");
+                }
+                break;
+            case "-s2s":
+                dc.saveToServer(currentPerson);
+                c.say("-- saved to server --");
+                break;
+            case "-load":
+                loadAll(dc.getAllFromServer());
+                c.say("-- load complete --");
+                break;
+            default:
+                c.say("-- Command Error --");
+        }
+
+        return true;
+    }
+
+    private String getAllUsers() {
+        String returnMe = "Users:";
+        for (File next : mr.files) {
+            if (next != null) {
+                returnMe += "\n\t   " + next.getName();
+            }
+        }
+        return returnMe;
+    }
+
+    private String getPersonInfo(String name) {
+        String returnMe = "";
+        for (File next : mr.files) {
+            if (next != null) {
+                if (!next.isHidden() && next.getName().equals(name)) {
+                    MyReader nmr = new MyReader(next);
+                    returnMe += next.getName() + ":";
+                    while (nmr.hasMoreData()) {
+                        returnMe += "\n\t   " + nmr.giveMeTheNextLine();
+                    }
+                }
+            }
+        }
+        return returnMe;
+    }
+
+    private void loadAll(Person[] allFromServer) {
+        for (int i = 0; i < mr.files.length; i++) {
+            mr.files[i].delete();
+        }
+        
+        for (Person next : allFromServer) {
+            MyWriter nextWriter = new MyWriter(next.getName().toLowerCase());
+            
+            if (next.getName().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getName());
+            }
+            
+            if (next.getLastName().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getLastName());
+            }
+            
+             if (next.getGender().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getGender());
+            }
+            
+            if (next.getOccupation() == GLOBALS.NULL) {
+                nextWriter.println("-");
+            } else {
+                nextWriter.println("" + next.getOccupation());
+            }
+            
+            if (next.getHometown().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getHometown());
+            }
+            
+            if (next.getAge() == 0) {
+                nextWriter.println("-");
+            } else {
+                nextWriter.println("" + next.getAge());
+            }
+
+            if (next.getLikes().isEmpty()) {
+
+                nextWriter.println("-");
+            } else {
+                nextWriter.println(next.getLikes());
+            }
+            nextWriter.close();
+        }
+        mr = new MyReader();
+    }
 }
