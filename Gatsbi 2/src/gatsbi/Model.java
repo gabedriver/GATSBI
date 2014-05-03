@@ -47,20 +47,24 @@ class Model {
 
     public void askQuestion() {
         if (GLOBALS.bypass) {
+
             return;
         }
         if (!QQ.isEmpty()) {
             Question nextQuestion = QQ.poll();
             lastAskedQuestion = nextQuestion.questionNumber;
+
+            System.out.println("lastAskedQuestion = " + lastAskedQuestion);
+
             if (currentPerson.qualityKnown(lastAskedQuestion)) {
                 askQuestion();
             } else {
                 c.say(nextQuestion.theQuestion);
                 if (b) {
-                    System.out.println("hiewefon");
                     printPerson();
                 }
                 b = true;
+
                 return;
             }
         }
@@ -84,6 +88,7 @@ class Model {
     }
 
     private void getResponse(String text) {
+        
         switch (lastAskedQuestion) {
             case GLOBALS.START:
                 c.say(responses.get("hello")[(int) (Math.random() * 10)]);
@@ -98,15 +103,17 @@ class Model {
                 }
                 if (personIsNew) {
                     c.say("Oh, I haven't met you before! We should get to know each other!");
+                    printPerson();
                 } else {
-                    c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");
-
+//                    c.say("Oh, you again. You like " + currentPerson.getLikes() + ", if I remember correctly.");
+                    c.say("Oh, you again. I remember you!");
                 }
                 lastAskedQuestion = GLOBALS.NONE;
                 break;
 
             case GLOBALS.QLASTNAME:
                 currentPerson.setLastName(parseMidLast(text));
+                printPerson();
                 c.say("Your name is cool, but not as cool as mine.");
 
                 text = cleanse(text);
@@ -119,7 +126,7 @@ class Model {
 
             case GLOBALS.QAGE:
                 currentPerson.setAge((short) parseAge(text));
-
+                printPerson();
                 text = cleanse(text);
 
                 if (text.contains("you") || text.contains("your")) {
@@ -139,7 +146,7 @@ class Model {
                     c.say("You don't need to conform to the binary. I don't... oh wait");
                 }
                 text = cleanse(text);
-
+                printPerson();
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I'm a machine programmed to be male.");
                 }
@@ -153,6 +160,7 @@ class Model {
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I'm a machine... Isn't it obvious?");
                 }
+                printPerson();
                 lastAskedQuestion = GLOBALS.NONE;
                 break;
 
@@ -163,6 +171,7 @@ class Model {
                 if (text.contains("you") || text.contains("your")) {
                     c.say("I live in a far off, ditant land called Ford.");
                 }
+                printPerson();
                 lastAskedQuestion = GLOBALS.NONE;
                 break;
 
@@ -170,9 +179,10 @@ class Model {
                 currentPerson.setLikes(parseLikes(text));
                 text = cleanse(text);
                 c.say("How cute.");
-                if (text.contains("you") || text.contains("your")) {
+                if (text.contains("you")) {
                     c.say("Me? I like " + gatsbi.getLikes() + "!");
                 }
+                printPerson();
                 lastAskedQuestion = GLOBALS.NONE;
                 break;
 
@@ -208,13 +218,13 @@ class Model {
         returnMe = returnMe.replaceAll("what ", "");
         returnMe = returnMe.replaceAll("whats ", "");
         returnMe = returnMe.replaceAll("yours ", "");
-        returnMe = returnMe.replaceAll("your ", "");
         returnMe = returnMe.replaceAll("how ", "");
         returnMe = returnMe.replaceAll("about ", "");
         returnMe = returnMe.replaceAll("you ", "");
 
         return returnMe;
-    }
+    }                    
+
 
     private short parseOccupation(String text) {
 
@@ -645,7 +655,10 @@ class Model {
 //        for (int i = 0; i < 8; i++) {
 //            mw.println(""+currentPerson.getNext());
 //        }
+        mw = new MyWriter(currentPerson.getName());
+        
         if (mw != null) {
+            System.out.println(".printing.printing.printing.printing.printing.");
 
             if (currentPerson.getName().isEmpty()) {
                 mw.println("-");
@@ -682,7 +695,6 @@ class Model {
             }
 
             if (currentPerson.getLikes().isEmpty()) {
-
                 mw.println("-");
             } else {
                 mw.println(currentPerson.getLikes());
@@ -756,9 +768,10 @@ class Model {
     }
 
     private void loadAll(Person[] allFromServer) {
-        for (int i = 0; i < mr.files.length; i++) {
-            mr.files[i].delete();
-        }
+//        for (int i = 0; i < mr.files.length; i++) {
+//            System.out.println(mr.files.length);
+//            mr.files[i].delete();
+//        }
 
         for (Person next : allFromServer) {
             MyWriter nextWriter = new MyWriter(next.getName().toLowerCase());

@@ -14,14 +14,16 @@ import java.util.ArrayList;
  */
 public class DataClient {
 
-    String hostName = "";
+    String hostName = "wu-1041.willamette.edu";
     int portNumber = 9090;
 
     DataClient() {
-        try {
-            hostName = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException ex) {
-        }
+//        try {
+//            hostName = InetAddress.getLocalHost().getHostName();
+//        } catch (UnknownHostException ex) {
+//        }
+        
+        
     }
 
     public boolean saveToServer(Person currentPerson) {
