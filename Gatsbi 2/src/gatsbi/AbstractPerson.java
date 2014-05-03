@@ -6,12 +6,12 @@ package gatsbi;
 abstract class AbstractPerson {
 
     private String firstName = "";
-    private String lastName= "";
-    private String gender= "";
+    private String lastName= "-";
+    private String gender= "-";
     private short occupation = GLOBALS.NULL;
-    private String hometown= "";
+    private String hometown= "-";
     private short age=0;
-    private String likes= "";
+    private String likes= "-";
 
     private int cycleNum = 0;
 
