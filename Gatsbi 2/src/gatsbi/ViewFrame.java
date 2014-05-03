@@ -20,7 +20,7 @@ public class ViewFrame extends javax.swing.JFrame {
         }
         setVisible(true);
         inputTF.requestFocus();
-        bypassBox.setSelected(true);
+        bypassBox.setSelected(false);
 
     }
 

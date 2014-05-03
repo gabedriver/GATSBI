@@ -18,10 +18,10 @@ public class DataClient {
     int portNumber = 9090;
 
     DataClient() {
-        try {
-            hostName = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException ex) {
-        }
+//        try {
+//            hostName = InetAddress.getLocalHost().getHostName();
+//        } catch (UnknownHostException ex) {
+//        }
         
         
     }
