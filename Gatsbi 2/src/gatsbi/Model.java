@@ -47,7 +47,6 @@ class Model {
 
     public void askQuestion() {
         if (GLOBALS.bypass) {
-
             return;
         }
         if (!QQ.isEmpty()) {
@@ -190,6 +189,7 @@ class Model {
                 if (personExists(text)) {
                     foundFriend(getPerson(text));
                 } else {
+                    c.say("No, Sorry I don't know them.");
                     lastAskedQuestion = GLOBALS.NONE;
                 }
                 break;
@@ -310,7 +310,7 @@ class Model {
 
     private String parseMidLast(String text) {
         String returnMe = text;
-        returnMe = cleanse(returnMe);
+        returnMe = returnMe.replaceAll("[^a-zA-Z -]", "");
         returnMe = returnMe.replaceAll("middle ", "");
         returnMe = returnMe.replaceAll("last ", "");
         returnMe = returnMe.replaceAll("my ", "");
@@ -349,9 +349,9 @@ class Model {
         text = text.replaceAll("about ", "");
         text = text.replaceAll("you", "");
 //        System.out.println(text);
-        if (personExists(text)) {
-            foundSelf(getPerson(text));
-        }
+//        if (personExists(text)) {
+//            foundSelf(getPerson(text));
+//        }
         String[] words = text.split(" ");
         for (int i = 0; i < words.length; i++) {
             words[i] = (char) (words[i].charAt(0) - diff) + words[i].substring(1);
@@ -382,7 +382,7 @@ class Model {
 
     String cleanse(String string) { //makes strings all lower case, gets rid of punctuation (does not affect spaces)
         string = string.toLowerCase();
-        string = string.replaceAll("[^a-z ]", "");
+        string = string.replaceAll("[^a-z -]", "");
         return string;
     }
 
@@ -413,6 +413,7 @@ class Model {
 //                System.out.println("~" + next.getName());
                 if (!next.isHidden() && next.getName().equals(name)) {
                     returnMe = true;
+                    break;
                 }
             }
         }
