@@ -48,6 +48,7 @@ class Person extends AbstractPerson {
                 }
                 break;
             case GLOBALS.QGENDER:
+
                 if(!getGender().equals("-")){
                     returnMe =   true;
                 }

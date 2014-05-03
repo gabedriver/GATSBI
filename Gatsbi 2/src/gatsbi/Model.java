@@ -53,7 +53,9 @@ class Model {
         if (!QQ.isEmpty()) {
             Question nextQuestion = QQ.poll();
             lastAskedQuestion = nextQuestion.questionNumber;
+
             System.out.println("lastAskedQuestion = " + lastAskedQuestion);
+
             if (currentPerson.qualityKnown(lastAskedQuestion)) {
                 askQuestion();
             } else {
@@ -422,6 +424,8 @@ class Model {
     private void foundSelf(File file) { //now ask questions about the current user. eg "How are your CS Classes going?"
         MyReader self = new MyReader(file);
         currentPerson = new Person(self);
+        mw = new MyWriter(cleanse(currentPerson.getName()));
+        printPerson();
     }
 
     private void foundFriend(File next) { //spit out some relevent info about the person, or ask more questions about the person to fill in variables.
@@ -449,7 +453,6 @@ class Model {
         }
 
         if ((text.contains("your") || text.contains("you")) && text.contains("name")) {
-
             c.say("My name is " + gatsbi.getName());
             return;
         }
