@@ -1,0 +1,7 @@
+firstName(str)
+lastName(str)
+male
+occupation(0-8)
+hometown(str)
+age(int)
+likes(str)
