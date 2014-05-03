@@ -18,10 +18,10 @@ public class DataClient {
     int portNumber = 9090;
 
     DataClient() {
-//        try {
-//            hostName = InetAddress.getLocalHost().getHostName();
-//        } catch (UnknownHostException ex) {
-//        }
+        try {
+            hostName = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException ex) {
+        }
         
         
     }
@@ -169,8 +169,7 @@ public class DataClient {
             System.err.println("Don't know about host " + hostName);
             System.exit(1);
         } catch (IOException e) {
-            System.err.println("Couldn't get I/O for the connection to "
-                    + hostName);
+            System.err.println("Couldn't get I/O for the connection to " + hostName);
             System.exit(1);
         }
         return f;
